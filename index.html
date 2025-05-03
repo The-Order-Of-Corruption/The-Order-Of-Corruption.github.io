@@ -330,14 +330,21 @@
       });
     });
 
-    let calors = 0;
-    const calorCount = document.getElementById('calor-count');
-    const calorButton = document.getElementById('calor-button');
+    let calors = parseInt(localStorage.getItem('calors')) || 0;
+const calorCount = document.getElementById('calor-count');
+const calorButton = document.getElementById('calor-button');
 
-    calorButton.addEventListener('click', () => {
-      calors++;
-      calorCount.textContent = calors;
-    });
+// Update display on load
+calorCount.textContent = calors;
+
+calorButton.addEventListener('click', () => {
+  calors++;
+  calorCount.textContent = calors;
+  localStorage.setItem('calors', calors);
+});
+
+
+    
   </script>
 
 </body>
