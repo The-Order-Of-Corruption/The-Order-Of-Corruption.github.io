@@ -294,6 +294,30 @@
       color: white;
     }
 
+  #level-up {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+    font-family: 'Cinzel', serif;
+  }
+  
+  #level-up:hover {
+    background-color: #45a049;
+  }
+  
+  #level-up:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+
+
+
     
   </style>
 </head>
@@ -395,6 +419,11 @@
         <p>Click to earn <strong>Calors</strong> and buy magical items!</p>
         <h3>Calors: <span id="calor-count">0</span></h3>
         <button id="calor-button">Earn Calors</button>
+        
+        <h3>Level: <span id="level">1</span></h3>
+        <h3>Calors per Click: <span id="calor-per-click">1</span></h3>
+        <button id="level-up">Level Up (Cost: <span id="level-up-cost">10</span> Calors)</button>
+
         
         <div class="shop-section">
           <button id="buy-pack">Buy Mystery Pack (150 Calors)</button>
@@ -669,12 +698,12 @@
   }
 
 
-  // Update calor display and shop button
   function updateCalorDisplay() {
-    document.getElementById('calor-count').textContent = calors;
-    localStorage.setItem('calors', calors);
-    document.getElementById('buy-pack').disabled = calors < 150;
-  }
+  document.getElementById('calor-count').textContent = calors;
+  localStorage.setItem('calors', calors);
+  document.getElementById('buy-pack').disabled = calors < 150;
+  document.getElementById('level-up').disabled = calors < levelUpCost;
+}
 
   // Item database
   const itemsDB = {
@@ -718,20 +747,67 @@
     alert("You need 150 Calors to buy a pack!");
   }
 });
+// Player stats
+let level = parseInt(localStorage.getItem('level')) || 1;
+let calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
+let levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
 
-  // Initialize everything when page loads
-  window.addEventListener('DOMContentLoaded', () => {
-    // Load saved data
-    calors = parseInt(localStorage.getItem('calors')) || 0;
-    inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+// Update level display
+function updateLevelDisplay() {
+  document.getElementById('level').textContent = level;
+  document.getElementById('calor-per-click').textContent = calorPerClick;
+  document.getElementById('level-up-cost').textContent = levelUpCost;
+  document.getElementById('level-up').disabled = calors < levelUpCost;
+  
+  // Save to localStorage
+  localStorage.setItem('level', level);
+  localStorage.setItem('calorPerClick', calorPerClick);
+  localStorage.setItem('levelUpCost', levelUpCost);
+}
+
+// Level up function
+function levelUp() {
+  if (calors >= levelUpCost) {
+    calors -= levelUpCost;
+    level++;
+    calorPerClick++;
+    levelUpCost += 10; // Increase cost by 10 each level
     
-    // Update displays
     updateCalorDisplay();
-    updateInventoryDisplay();
-    loadPositions();
+    updateLevelDisplay();
     
-    console.log('Initialized with:', {calors, inventory});
-  });
+    alert(`Level Up! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
+  }
+}
+
+// Update calor button to use calorPerClick
+document.getElementById('calor-button').addEventListener('click', () => {
+  calors += calorPerClick;
+  updateCalorDisplay();
+});
+
+// Set up level up button
+document.getElementById('level-up').addEventListener('click', levelUp);
+
+    
+
+ // Initialize everything when page loads
+window.addEventListener('DOMContentLoaded', () => {
+  // Load saved data
+  calors = parseInt(localStorage.getItem('calors')) || 0;
+  inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+  level = parseInt(localStorage.getItem('level')) || 1;
+  calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
+  levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
+  
+  // Update displays
+  updateCalorDisplay();
+  updateInventoryDisplay();
+  updateLevelDisplay();
+  loadPositions();
+  
+  console.log('Initialized with:', {calors, inventory, level, calorPerClick, levelUpCost});
+});
 </script>
 
   
