@@ -613,77 +613,19 @@
     }
   });
 
-// Update calor display and shop button
-function updateCalorDisplay() {
-  document.getElementById('calor-count').textContent = calors; // Display calor count
-  localStorage.setItem('calors', calors); // Save to localStorage
-  document.getElementById('buy-pack').disabled = calors < 250; // Disable buy button if not enough Calors
-}
-
-// Update inventory display
-function updateInventoryDisplay() {
-  const display = document.getElementById('item-display');
-  display.innerHTML = ''; // Clear previous items
-
-  // If no items in inventory, show a message
-  if (inventory.length === 0) {
-    display.innerHTML = '<p>No items yet. Buy some packs!</p>';
-    return;
-  }
-
-  // Display each item in the inventory
-  inventory.forEach(item => {
-    const card = document.createElement('div');
-    card.className = `item-card ${item.rarity}`;
-    card.textContent = item.name;
-    display.appendChild(card);
-  });
-}
-
-function updateCalorDisplay() {
-  console.log("Updating calor display...");  // Debugging log
-  document.getElementById('calor-count').textContent = calors;  // Display calor count
-  localStorage.setItem('calors', calors);  // Save to localStorage
-  document.getElementById('buy-pack').disabled = calors < 250;  // Disable buy button if not enough Calors
-}
-
-function updateInventoryDisplay() {
-  console.log("Updating inventory display...");  // Debugging log
-  const display = document.getElementById('item-display');
-  display.innerHTML = '';  // Clear previous items
-
-  if (inventory.length === 0) {
-    display.innerHTML = '<p>No items yet. Buy some packs!</p>';
-    return;
-  }
-
-  inventory.forEach(item => {
-    console.log("Adding item to display:", item);  // Debugging log
-    const card = document.createElement('div');
-    card.className = `item-card ${item.rarity}`;
-    card.textContent = item.name;
-    display.appendChild(card);
-  });
-}
-
+  // Initialize everything when page loads
+  window.addEventListener('DOMContentLoaded', () => {
+    // Load saved data
+    calors = parseInt(localStorage.getItem('calors')) || 0;
+    inventory = JSON.parse(localStorage.getItem('inventory')) || [];
     
-
-window.addEventListener('DOMContentLoaded', () => {
-  // Ensure inventory and calor values are initialized first before displaying
-  inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-  calors = parseInt(localStorage.getItem('calors')) || 0;
-
-  console.log("Loaded Calors from localStorage:", localStorage.getItem('calors'));
-  console.log("Loaded Inventory from localStorage:", localStorage.getItem('inventory'));
-
-  
-  
-  loadPositions();            // Load tier list positions
-  updateCalorDisplay();       // Show saved calor count
-  updateInventoryDisplay();   // Show saved inventory
-});
-
-
+    // Update displays
+    updateCalorDisplay();
+    updateInventoryDisplay();
+    loadPositions();
+    
+    console.log('Initialized with:', {calors, inventory});
+  });
 </script>
 
   
