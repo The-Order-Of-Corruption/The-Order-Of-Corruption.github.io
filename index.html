@@ -402,6 +402,9 @@
           <div id="item-display"></div>
         </div>
       </div>
+    </div>
+  </section>
+</div>
       
       <!-- NEW DROP RATES PANEL -->
       <div class="drop-rates">
@@ -613,6 +616,45 @@
     }
   });
 
+// Update calor display and shop button
+function updateCalorDisplay() {
+  document.getElementById('calor-count').textContent = calors; // Display calor count
+  localStorage.setItem('calors', calors); // Save to localStorage
+  document.getElementById('buy-pack').disabled = calors < 250; // Disable buy button if not enough Calors
+}
+
+// Update inventory display
+function updateInventoryDisplay() {
+  const display = document.getElementById('item-display');
+  display.innerHTML = ''; // Clear previous items
+
+  // If no items in inventory, show a message
+  if (inventory.length === 0) {
+    display.innerHTML = '<p>No items yet. Buy some packs!</p>';
+    return;
+  }
+
+  // Display each item in the inventory
+  inventory.forEach(item => {
+    const card = document.createElement('div');
+    card.className = `item-card ${item.rarity}`;
+    card.textContent = item.name;
+    display.appendChild(card);
+  });
+}
+
+// Initialize everything when page loads
+window.addEventListener('load', () => {
+  loadPositions(); // Load tier list positions
+  updateCalorDisplay(); // Show saved calor count
+  updateInventoryDisplay(); // Show saved inventory
+});
+
+
+
+
+
+    
   // Initialize everything when page loads
   window.addEventListener('load', () => {
     loadPositions();
