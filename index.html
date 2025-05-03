@@ -752,6 +752,31 @@
       }
     }
 
+// Update level display
+function updateLevelDisplay() {
+  document.getElementById('level').textContent = level;
+  document.getElementById('calor-per-click').textContent = calorPerClick;
+  document.getElementById('level-up-cost').textContent = levelUpCost; // This updates the displayed cost
+
+  if (level >= 5) {
+    document.getElementById('level-up').classList.add('max-level');
+    document.getElementById('level-up').textContent = "MAX LEVEL REACHED";
+  } else {
+    document.getElementById('level-up').classList.remove('max-level');
+    document.getElementById('level-up').textContent = `Level Up (Cost: ${levelUpCost} Calors)`;
+  }
+  
+  document.getElementById('level-up').disabled = calors < levelUpCost || level >= 5;
+  
+  localStorage.setItem('level', level);
+  localStorage.setItem('calorPerClick', calorPerClick);
+  localStorage.setItem('levelUpCost', levelUpCost);
+}
+
+
+
+
+    
     function updateLevelDisplay() {
       document.getElementById('level').textContent = level;
       document.getElementById('calor-per-click').textContent = calorPerClick;
