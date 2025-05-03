@@ -696,16 +696,22 @@
     document.getElementById('calor-count').textContent = calors;
     localStorage.setItem('calors', calors);
     document.getElementById('buy-pack').disabled = calors < 150;
-    updateLevelDisplay(); // This ensures the level up button state is updated
+    updateLevelDisplay();
   }
 
   const itemsDB = {
-    common: ["Tory", "Drapes", "Sehar", "Garbona"], // Added Garbona to common
-    uncommon: ["Berthold", "Gronkle", "York", "Ade", "Seren", "Ata"], // Added Ade, Seren, Ata to uncommon
+    common: ["Tory", "Drapes", "Sehar", "Garbona"],
+    uncommon: ["Berthold", "Gronkle", "York", "Ade", "Seren", "Ata"],
     rare: ["Bidon", "Victor", "Veroner", "Mikael", "Beke", "Matheus"],
     epic: ["Gorm", "Patrice", "Oswald", "Kaito", "Butcher"],
     legendary: ["Han", "Chiz", "Corin"]
   };
+
+  // Add the missing calor button click handler
+  document.getElementById('calor-button').addEventListener('click', function() {
+    calors += calorPerClick;
+    updateCalorDisplay();
+  });
 
   document.getElementById('buy-pack').addEventListener('click', function() {
     if (calors >= 150) {
@@ -714,32 +720,25 @@
       const roll = Math.random() * 100;
       let rarity, item;
       
-      // Drop rates matching your displayed percentages
-      if (roll < 60) { // 60% chance
+      if (roll < 60) {
         rarity = 'common';
-      } else if (roll < 90) { // 30% chance (60-90)
+      } else if (roll < 90) {
         rarity = 'uncommon';
-      } else if (roll < 97) { // 7% chance (90-97)
+      } else if (roll < 97) {
         rarity = 'rare';
-      } else if (roll < 99.5) { // 2.5% chance (97-99.5)
+      } else if (roll < 99.5) {
         rarity = 'epic';
-      } else { // 0.5% chance (99.5-100)
+      } else {
         rarity = 'legendary';
       }
       
-      // Get random item from selected rarity
-      const possibleItems = itemsDB[rarity];
-      item = possibleItems[Math.floor(Math.random() * possibleItems.length)];
-      
-      // Add to inventory
+      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
       inventory.push({ name: item, rarity: rarity });
       
-      // Save and update displays
       localStorage.setItem('inventory', JSON.stringify(inventory));
       updateCalorDisplay();
       updateInventoryDisplay();
       
-      // Show appropriate alert
       const rarityNames = {
         common: "COMMON",
         uncommon: "UNCOMMON", 
@@ -776,17 +775,14 @@
     }
   }
 
-  // Single updateLevelDisplay function
   function updateLevelDisplay() {
     const levelUpBtn = document.getElementById('level-up');
     const costDisplay = document.getElementById('level-up-cost');
     
-    // Update all displays
     document.getElementById('level').textContent = level;
     document.getElementById('calor-per-click').textContent = calorPerClick;
     costDisplay.textContent = levelUpCost;
 
-    // Update button state and appearance
     if (level >= 5) {
       levelUpBtn.classList.add('max-level');
       levelUpBtn.textContent = "MAX LEVEL REACHED";
@@ -797,7 +793,6 @@
       levelUpBtn.disabled = calors < levelUpCost;
     }
     
-    // Save to localStorage
     localStorage.setItem('level', level);
     localStorage.setItem('calorPerClick', calorPerClick);
     localStorage.setItem('levelUpCost', levelUpCost);
