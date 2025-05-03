@@ -603,8 +603,96 @@
 
   document.getElementById('level-up').addEventListener('click', levelUp);
 
-  // Keep all your other existing functions (updateInventoryDisplay, etc.)
-  // ... [rest of your existing code] ...
+  // Event listeners (already included in previous code)
+  document.getElementById('calor-button').addEventListener('click', () => {
+    calors += calorPerClick;
+    updateCalorDisplay();
+  });
+
+  document.getElementById('level-up').addEventListener('click', levelUp);
+
+  // ===== THE MISSING PARTS THAT WERE LEFT OUT =====
+  
+  // Inventory and pack purchase functionality
+  document.getElementById('buy-pack').addEventListener('click', function() {
+    if (calors >= 150) {
+      calors -= 150;
+      
+      const roll = Math.random() * 100;
+      let rarity, item;
+      
+      if (roll < 60) rarity = 'common';
+      else if (roll < 90) rarity = 'uncommon';
+      else if (roll < 97) rarity = 'rare';
+      else if (roll < 99.5) rarity = 'epic';
+      else rarity = 'legendary';
+      
+      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+      inventory.push({ name: item, rarity: rarity });
+      
+      localStorage.setItem('inventory', JSON.stringify(inventory));
+      updateCalorDisplay();
+      updateInventoryDisplay();
+      
+      alert(rarity === 'legendary' 
+        ? `LEGENDARY FIND! ★★★★★\n${item}` 
+        : `You found: ${item} (${rarity.toUpperCase()})`);
+    } else {
+      alert("You need 150 Calors to buy a pack!");
+    }
+  });
+
+  // Inventory display function
+  function updateInventoryDisplay() {
+    const display = document.getElementById('item-display');
+    display.innerHTML = '';
+    
+    if (inventory.length === 0) {
+      display.innerHTML = '<p>No items yet. Buy some packs!</p>';
+      return;
+    }
+    
+    const itemCounts = {};
+    inventory.forEach(item => {
+      const key = `${item.name}|${item.rarity}`;
+      itemCounts[key] = (itemCounts[key] || 0) + 1;
+    });
+    
+    const uniqueItems = Object.keys(itemCounts).map(key => {
+      const [name, rarity] = key.split('|');
+      return { name, rarity, count: itemCounts[key] };
+    });
+    
+    const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+    uniqueItems.sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity]);
+    
+    uniqueItems.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `item-card ${item.rarity}`;
+      card.textContent = `${item.name} ×${item.count}`;
+      display.appendChild(card);
+    });
+  }
+
+  // Item database
+  const itemsDB = {
+    common: ["Tory", "Drapes", "Sehar"],
+    uncommon: ["Berthold", "Gronkle", "York"],
+    rare: ["Bidon", "Victor", "Veroner", "Mikael", "Beke", "Matheus"],
+    epic: ["Gorm", "Patrice", "Oswald", "Kaito", "Butcher"],
+    legendary: ["Han", "Chiz", "Corin"]
+  };
+
+  // Tier list reset functionality
+  document.getElementById('reset-tierlist').addEventListener('click', resetTierList);
+
+  function resetTierList() {
+    const itemPool = document.getElementById('item-pool');
+    document.querySelectorAll('#tierlist .item').forEach(item => {
+      itemPool.appendChild(item);
+    });
+    localStorage.removeItem('tierListPositions');
+  }
 </script>
 </body>
 </html>
