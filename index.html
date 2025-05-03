@@ -640,12 +640,16 @@ function updateInventoryDisplay() {
   });
 }
 
-// Initialize everything when page loads
 window.addEventListener('load', () => {
-  loadPositions(); // Load tier list positions
-  updateCalorDisplay(); // Show saved calor count
-  updateInventoryDisplay(); // Show saved inventory
+  // Ensure inventory and calor values are initialized first before displaying
+  inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+  calors = parseInt(localStorage.getItem('calors')) || 0;
+  
+  loadPositions();            // Load tier list positions
+  updateCalorDisplay();       // Show saved calor count
+  updateInventoryDisplay();   // Show saved inventory
 });
+
 
 </script>
 
