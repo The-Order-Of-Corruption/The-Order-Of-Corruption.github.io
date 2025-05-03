@@ -268,6 +268,17 @@
       70% { box-shadow: 0 0 0 10px rgba(255,152,0,0); }
       100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); }
     }
+
+    .item-card {
+      background-color: #333;
+      padding: 10px;
+      border-radius: 6px;
+      min-width: 100px;
+      text-align: center;
+      margin: 5px;
+      color: white;
+    }
+
     
   </style>
 </head>
@@ -430,6 +441,8 @@
   // Tab switching functionality
   const tabs = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
+    // Player inventory
+let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -522,6 +535,36 @@
     localStorage.setItem('calors', calors);
   });
 
+    // Update inventory display
+function updateInventoryDisplay() {
+  const display = document.getElementById('item-display');
+  display.innerHTML = '';
+  
+  if (inventory.length === 0) {
+    display.innerHTML = '<p>No items yet. Buy some packs!</p>';
+    return;
+  }
+  
+  inventory.forEach(item => {
+    const card = document.createElement('div');
+    card.className = `item-card ${item.rarity}`;
+    card.textContent = item.name;
+    display.appendChild(card);
+  });
+}
+
+// Proper calor display function
+function updateCalorDisplay() {
+  document.getElementById('calor-count').textContent = calors;
+  localStorage.setItem('calors', calors);
+  updateShopButton();
+}
+
+// Shop button state
+function updateShopButton() {
+  document.getElementById('buy-pack').disabled = calors < 250;
+}
+
     // Updated item database with your requested items
 const items = {
   common: [
@@ -590,6 +633,9 @@ document.getElementById('buy-pack').addEventListener('click', function() {
   }
 });
 
+// Initialize displays
+updateInventoryDisplay();
+updateShopButton();
 // Rest of your existing JavaScript remains the same
 
   // Load saved positions when page loads
