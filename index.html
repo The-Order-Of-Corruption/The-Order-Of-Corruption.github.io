@@ -397,7 +397,7 @@
         <button id="calor-button">Earn Calors</button>
         
         <div class="shop-section">
-          <button id="buy-pack">Buy Mystery Pack (250 Calors)</button>
+          <button id="buy-pack">Buy Mystery Pack (150 Calors)</button>
           <h3>Your Collection:</h3>
           <div id="item-display"></div>
         </div>
@@ -586,8 +586,8 @@
 
   // Buy pack function
   document.getElementById('buy-pack').addEventListener('click', function() {
-    if (calors >= 250) {
-      calors -= 250;
+    if (calors >= 150) {
+      calors -= 150;
       
       const roll = Math.random() * 100;
       let rarity, item;
@@ -609,7 +609,7 @@
         ? `LEGENDARY FIND! ★★★★★\n${item}` 
         : `You found: ${item} (${rarity.toUpperCase()})`);
     } else {
-      alert("You need 250 Calors to buy a pack!");
+      alert("You need 150 Calors to buy a pack!");
     }
   });
 
