@@ -316,7 +316,15 @@
     cursor: not-allowed;
   }
 
+  .max-level {
+  background-color: #ff9800 !important;
+  color: black !important;
+  font-weight: bold;
+}
 
+.max-level:hover {
+  background-color: #e68a00 !important;
+}
 
     
   </style>
@@ -751,13 +759,6 @@
 let level = parseInt(localStorage.getItem('level')) || 1;
 let calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
 let levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
-
-// Update level display
-function updateLevelDisplay() {
-  document.getElementById('level').textContent = level;
-  document.getElementById('calor-per-click').textContent = calorPerClick;
-  document.getElementById('level-up-cost').textContent = levelUpCost;
-  document.getElementById('level-up').disabled = calors < levelUpCost;
   
   // Save to localStorage
   localStorage.setItem('level', level);
@@ -767,16 +768,25 @@ function updateLevelDisplay() {
 
 // Level up function
 function levelUp() {
+  if (level >= 5) {  // Changed from 15 to 5
+    alert("You've reached the maximum level of 5!");
+    return;
+  }
+  
   if (calors >= levelUpCost) {
     calors -= levelUpCost;
     level++;
     calorPerClick++;
-    levelUpCost += 10; // Increase cost by 10 each level
+    levelUpCost += 10;
     
     updateCalorDisplay();
     updateLevelDisplay();
     
-    alert(`Level Up! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
+    if (level === 5) {  // Changed from 15 to 5
+      alert(`MAX LEVEL REACHED! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
+    } else {
+      alert(`Level Up! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
+    }
   }
 }
 
@@ -789,14 +799,43 @@ document.getElementById('calor-button').addEventListener('click', () => {
 // Set up level up button
 document.getElementById('level-up').addEventListener('click', levelUp);
 
-    
+// Update level display
+function updateLevelDisplay() {
+  document.getElementById('level').textContent = level;
+  document.getElementById('calor-per-click').textContent = calorPerClick;
+  document.getElementById('level-up-cost').textContent = levelUpCost;
 
- // Initialize everything when page loads
+  // Update max-level styling
+  if (level >= 5) {  // Changed from 15 to 5
+    document.getElementById('level-up').classList.add('max-level');
+  } else {
+    document.getElementById('level-up').classList.remove('max-level');
+  }
+  
+  // Disable if can't afford or at max level
+  document.getElementById('level-up').disabled = calors < levelUpCost || level >= 5;  // Changed from 15 to 5
+  
+  // Change button text at max level
+  if (level >= 5) {  // Changed from 15 to 5
+    document.getElementById('level-up').textContent = "MAX LEVEL REACHED";
+  } else {
+    document.getElementById('level-up').textContent = `Level Up (Cost: ${levelUpCost} Calors)`;
+  }
+  
+  // Save to localStorage
+  localStorage.setItem('level', level);
+  localStorage.setItem('calorPerClick', calorPerClick);
+  localStorage.setItem('levelUpCost', levelUpCost);
+}
+
+
+    
+// Initialize everything when page loads
 window.addEventListener('DOMContentLoaded', () => {
   // Load saved data
   calors = parseInt(localStorage.getItem('calors')) || 0;
   inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-  level = parseInt(localStorage.getItem('level')) || 1;
+  level = Math.min(parseInt(localStorage.getItem('level')) || 1, 5);  // Added max level check
   calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
   levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
   
