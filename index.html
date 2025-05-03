@@ -466,41 +466,125 @@
     });
   });
 
-  // Tier List Drag and Drop Functionality
+  // Tier List Drag and Drop Functionality - Updated for mobile support
   const tierItems = document.querySelectorAll('#tierlist .item');
   const dropZones = document.querySelectorAll('.drop-zone');
 
   // Make items draggable
   tierItems.forEach(item => {
-    item.addEventListener('dragstart', () => {
-      item.classList.add('dragging');
-    });
-    item.addEventListener('dragend', () => {
-      item.classList.remove('dragging');
-      savePositions();
-    });
+    // For mouse devices
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragend', handleDragEnd);
+    
+    // For touch devices
+    item.addEventListener('touchstart', handleTouchStart, {passive: false});
+    item.addEventListener('touchend', handleTouchEnd, {passive: false});
+    item.addEventListener('touchmove', handleTouchMove, {passive: false});
   });
 
   // Set up drop zones
   dropZones.forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      zone.classList.add('over');
-    });
+    // For mouse devices
+    zone.addEventListener('dragover', handleDragOver);
+    zone.addEventListener('dragleave', handleDragLeave);
+    zone.addEventListener('drop', handleDrop);
     
-    zone.addEventListener('dragleave', () => {
-      zone.classList.remove('over');
-    });
-    
-    zone.addEventListener('drop', (e) => {
-      const draggedItem = document.querySelector('.dragging');
-      if (draggedItem) {
-        zone.appendChild(draggedItem);
-        zone.classList.remove('over');
-        savePositions();
-      }
-    });
+    // For touch devices
+    zone.addEventListener('touchmove', handleTouchMove, {passive: false});
+    zone.addEventListener('touchend', handleTouchEnd, {passive: false});
   });
+
+  // Track touch state
+  let touchDraggedItem = null;
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  // Mouse event handlers
+  function handleDragStart(e) {
+    this.classList.add('dragging');
+  }
+
+  function handleDragEnd() {
+    this.classList.remove('dragging');
+    savePositions();
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    this.classList.add('over');
+  }
+
+  function handleDragLeave() {
+    this.classList.remove('over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    const draggedItem = document.querySelector('.dragging');
+    if (draggedItem) {
+      this.appendChild(draggedItem);
+      this.classList.remove('over');
+      savePositions();
+    }
+  }
+
+  // Touch event handlers
+  function handleTouchStart(e) {
+    e.preventDefault();
+    touchDraggedItem = this;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    this.classList.add('dragging');
+  }
+
+  function handleTouchMove(e) {
+    if (!touchDraggedItem) return;
+    e.preventDefault();
+    
+    // Update item position during touch move
+    const touch = e.touches[0];
+    const x = touch.clientX - touchStartX;
+    const y = touch.clientY - touchStartY;
+    
+    touchDraggedItem.style.transform = `translate(${x}px, ${y}px)`;
+    
+    // Highlight potential drop zones
+    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropZone = touchElement.closest('.drop-zone');
+    
+    // Reset all drop zones
+    dropZones.forEach(zone => zone.classList.remove('over'));
+    
+    // Highlight current drop zone
+    if (dropZone) {
+      dropZone.classList.add('over');
+    }
+  }
+
+  function handleTouchEnd(e) {
+    if (!touchDraggedItem) return;
+    e.preventDefault();
+    
+    // Reset item position
+    touchDraggedItem.style.transform = '';
+    touchDraggedItem.classList.remove('dragging');
+    
+    // Find drop zone
+    const touch = e.changedTouches[0];
+    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropZone = touchElement?.closest('.drop-zone');
+    
+    // Reset all drop zones
+    dropZones.forEach(zone => zone.classList.remove('over'));
+    
+    // Move item to drop zone if valid
+    if (dropZone) {
+      dropZone.appendChild(touchDraggedItem);
+      savePositions();
+    }
+    
+    touchDraggedItem = null;
+  }
 
   // Save positions to browser storage
   function savePositions() {
