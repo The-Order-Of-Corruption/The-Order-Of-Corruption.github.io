@@ -162,7 +162,28 @@
   border: 2px dashed #aaa;
 }
 
+<style>
+  #calor-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+  }
 
+  #calor-button:hover {
+    background-color: #45a049;
+  }
+
+  #calor-count {
+    font-size: 24px;
+    color: #00ffcc;
+  }
+</style>
 
     
   </style>
@@ -178,6 +199,7 @@
   <button class="tab-btn" data-tab="chapters">The Story</button>
   <button class="tab-btn" data-tab="The World">The World</button>
   <button class="tab-btn" data-tab="tierlist">Tier List</button>
+  <button class="tab-btn" data-tab="clicker-game">Clicker Game</button>
 </nav>
 
 <div class="tab-content active" id="home">
@@ -254,6 +276,16 @@
   </section>
 </div>
 
+<!-- Clicker Game -->
+<div class="tab-content" id="clicker-game">
+  <section>
+    <h2>Calors Clicker</h2>
+    <p>Click the button below to earn <strong>Calors</strong>, the currency of The Order of Corruption!</p>
+    <h3>Calors: <span id="calor-count">0</span></h3>
+    <button id="calor-button">Earn Calors</button>
+  </section>
+</div>
+
 
 
 <script>
@@ -305,6 +337,16 @@ tierZones.forEach(zone => {
   });
 });
 
+<script>
+  let calors = 0;
+  const calorCount = document.getElementById('calor-count');
+  const calorButton = document.getElementById('calor-button');
+
+  calorButton.addEventListener('click', () => {
+    calors++;
+    calorCount.textContent = calors;
+  });
+</script>
   
 </script>
 
