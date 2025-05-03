@@ -295,40 +295,67 @@
       });
     });
 
-    const tierItems = document.querySelectorAll('.item');
-    const tierZones = document.querySelectorAll('.drop-zone');
+    // For drag and drop functionality
+const items = document.querySelectorAll('.item');
+const dropZones = document.querySelectorAll('.drop-zone');
 
-    let draggedItem = null;
+// Add event listeners to each item
+items.forEach(item => {
+  item.addEventListener('dragstart', (e) => {
+    item.classList.add('dragging');
+  });
+  item.addEventListener('dragend', (e) => {
+    item.classList.remove('dragging');
+    savePositions();  // Save the positions after dragging
+  });
+});
 
-    tierItems.forEach(item => {
-      item.addEventListener('dragstart', () => {
-        draggedItem = item;
-        item.classList.add('dragging');
-      });
+// Add event listeners to each drop zone
+dropZones.forEach(zone => {
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();  // Allow drop
+    zone.classList.add('over');
+  });
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('over');
+  });
+  zone.addEventListener('drop', (e) => {
+    const draggedItem = document.querySelector('.dragging');
+    if (draggedItem) {
+      zone.appendChild(draggedItem);
+      zone.classList.remove('over');
+      savePositions();  // Save the positions after dropping
+    }
+  });
+});
 
-      item.addEventListener('dragend', () => {
-        draggedItem = null;
-        item.classList.remove('dragging');
-      });
-    });
+// Function to save positions of items to localStorage
+function savePositions() {
+  const dropZonePositions = {};
+  dropZones.forEach(zone => {
+    dropZonePositions[zone.getAttribute('data-tier')] = Array.from(zone.children).map(item => item.innerText);
+  });
+  localStorage.setItem('dropZonePositions', JSON.stringify(dropZonePositions));  // Save to localStorage
+}
 
-    tierZones.forEach(zone => {
-      zone.addEventListener('dragover', e => {
-        e.preventDefault();
-        zone.classList.add('over');
-      });
-
-      zone.addEventListener('dragleave', () => {
-        zone.classList.remove('over');
-      });
-
-      zone.addEventListener('drop', () => {
-        if (draggedItem) {
-          zone.appendChild(draggedItem);
+// Function to load positions from localStorage
+function loadPositions() {
+  const dropZonePositions = JSON.parse(localStorage.getItem('dropZonePositions'));
+  if (dropZonePositions) {
+    Object.keys(dropZonePositions).forEach(tier => {
+      const zone = document.querySelector(`[data-tier="${tier}"]`);
+      dropZonePositions[tier].forEach(itemName => {
+        const item = Array.from(document.querySelectorAll('.item')).find(el => el.innerText === itemName);
+        if (item) {
+          zone.appendChild(item);
         }
-        zone.classList.remove('over');
       });
     });
+  }
+}
+
+loadPositions();  // Load positions on page load
+
 
     let calors = parseInt(localStorage.getItem('calors')) || 0;
 const calorCount = document.getElementById('calor-count');
