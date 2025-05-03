@@ -644,6 +644,10 @@ window.addEventListener('load', () => {
   // Ensure inventory and calor values are initialized first before displaying
   inventory = JSON.parse(localStorage.getItem('inventory')) || [];
   calors = parseInt(localStorage.getItem('calors')) || 0;
+
+  console.log("Loaded Calors from localStorage:", localStorage.getItem('calors'));
+  console.log("Loaded Inventory from localStorage:", localStorage.getItem('inventory'));
+
   
   loadPositions();            // Load tier list positions
   updateCalorDisplay();       // Show saved calor count
