@@ -566,7 +566,7 @@
   function updateCalorDisplay() {
     document.getElementById('calor-count').textContent = calors;
     localStorage.setItem('calors', calors);
-    document.getElementById('buy-pack').disabled = calors < 250;
+    document.getElementById('buy-pack').disabled = calors < 150;
   }
 
   // Item database
