@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <meta name="description" content="The Order of Corruption is a fantasy story featuring Glow powers, corruption, and epic character battles.">
   <meta name="keywords" content="fantasy story, Glow powers, corruption, The Order of Corruption, magic world">
   <meta name="author" content="Your Name">
-
   <meta name="google-site-verification" content="HAmEA7iyxGdA6LADuzqznaR5wfPQ7ZcNGQaZqVbTzeY" />
-  
   <title>The Order of Corruption</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
@@ -55,7 +53,8 @@
       font-weight: bold;
     }
 
-    nav button:hover, nav button.active {
+    nav button:hover,
+    nav button.active {
       background-color: #fff;
       color: #000;
       border-color: #fff;
@@ -72,8 +71,14 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     section {
@@ -82,7 +87,7 @@
       background-color: #111;
       padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
       border: 1px solid #333;
     }
 
@@ -92,7 +97,8 @@
       padding-bottom: 5px;
     }
 
-    p, li {
+    p,
+    li {
       line-height: 1.6;
       color: #ccc;
     }
@@ -114,241 +120,225 @@
     }
 
     .tier {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  border: 2px solid #444;
-  border-radius: 8px;
-  padding: 10px;
-  background: #2a2a2a;
-}
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      padding: 10px;
+      background: #2a2a2a;
+    }
 
-.tier-label {
-  width: 60px;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  margin-right: 10px;
-}
+    .tier-label {
+      width: 60px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      margin-right: 10px;
+    }
 
-.drop-zone {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  min-height: 60px;
-  padding: 10px;
-  background-color: #333;
-  border-radius: 8px;
-}
+    .drop-zone {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 60px;
+      padding: 10px;
+      background-color: #333;
+      border-radius: 8px;
+    }
 
-.item {
-  width: 100px;
-  height: 100px;
-  margin: 5px;
-  background-color: #4caf50;
-  border-radius: 6px;
-  text-align: center;
-  line-height: 100px;
-  cursor: move;
-  user-select: none;
-  font-weight: bold;
-}
+    .item {
+      width: 100px;
+      height: 100px;
+      margin: 5px;
+      background-color: #4caf50;
+      border-radius: 6px;
+      text-align: center;
+      line-height: 100px;
+      cursor: move;
+      user-select: none;
+      font-weight: bold;
+    }
 
-.item.dragging {
-  opacity: 0.5;
-}
+    .item.dragging {
+      opacity: 0.5;
+    }
 
-.drop-zone.over {
-  border: 2px dashed #aaa;
-}
+    .drop-zone.over {
+      border: 2px dashed #aaa;
+    }
 
-<style>
-  #calor-button {
-    padding: 15px 30px;
-    font-size: 18px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-  }
+    #calor-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
 
-  #calor-button:hover {
-    background-color: #45a049;
-  }
+    #calor-button:hover {
+      background-color: #45a049;
+    }
 
-  #calor-count {
-    font-size: 24px;
-    color: #00ffcc;
-  }
-</style>
-
-    
+    #calor-count {
+      font-size: 24px;
+      color: #00ffcc;
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>The Order of Corruption</h1>
-</header>
+  <header>
+    <h1>The Order of Corruption</h1>
+  </header>
 
-<nav>
-  <button class="tab-btn active" data-tab="home">Home</button>
-  <button class="tab-btn" data-tab="chapters">The Story</button>
-  <button class="tab-btn" data-tab="The World">The World</button>
-  <button class="tab-btn" data-tab="tierlist">Tier List</button>
-  <button class="tab-btn" data-tab="clicker-game">Clicker Game</button>
-</nav>
+  <nav>
+    <button class="tab-btn active" data-tab="home">Home</button>
+    <button class="tab-btn" data-tab="chapters">The Story</button>
+    <button class="tab-btn" data-tab="the-world">The World</button>
+    <button class="tab-btn" data-tab="tierlist">Tier List</button>
+    <button class="tab-btn" data-tab="clicker-game">Clicker Game</button>
+  </nav>
 
-<div class="tab-content active" id="home">
-  <section>
-    <h2>Welcome to the Order</h2>
-    <p>It’s a story set in a fantasy world in which the main topics of the story are: <strong>Corruption, Pride, and Greed</strong>.</p>
-    <p>This story is aimed towards teenagers and up. There are themes of <strong>self-harm, death, and discrimination</strong>. If you are used to these themes and are okay with them, then this story will be fine for you. This story only contains swear words on the <em>‘Medium’</em> level of Ofcom's swear words ranking.</p>
-    <p>The story’s main character is a young boy named <strong>Corin</strong>. He lost his parents at a young age and is now part of a crew of bandits led by an ex-Captain of the Karlam Military.</p>
-    <p><em>I hope you have a good time reading this story!</em></p>
-    <br>
-    <p><em>Author- Piotr A</em></p>
+  <div class="tab-content active" id="home">
+    <section>
+      <h2>Welcome to the Order</h2>
+      <p>It’s a story set in a fantasy world in which the main topics of the story are: <strong>Corruption, Pride, and Greed</strong>.</p>
+      <p>This story is aimed towards teenagers and up. There are themes of <strong>self-harm, death, and discrimination</strong>. If you are used to these themes and are okay with them, then this story will be fine for you. This story only contains swear words on the <em>‘Medium’</em> level of Ofcom's swear words ranking.</p>
+      <p>The story’s main character is a young boy named <strong>Corin</strong>. He lost his parents at a young age and is now part of a crew of bandits led by an ex-Captain of the Karlam Military.</p>
+      <p><em>I hope you have a good time reading this story!</em></p>
+      <br>
+      <p><em>Author- Piotr A</em></p>
+    </section>
+  </div>
 
-  </section>
-</div>
+  <div class="tab-content" id="chapters">
+    <section>
+      <h2>Read the Story</h2>
+      <p>The full story is available online, covering <strong>Chapters 1 – 166</strong>. You can read it on Reedsy at the link below:</p>
+      <p><a href="https://editor.reedsy.com/s/lz7m4EY" target="_blank">Read The Order of Corruption</a></p>
+    </section>
+  </div>
 
-<div class="tab-content" id="chapters">
-  <section>
-    <h2>Read the Story</h2>
-    <p>The full story is available online, covering <strong>Chapters 1 – 166</strong>. You can read it on Reedsy at the link below:</p>
-    <p><a href="https://editor.reedsy.com/s/lz7m4EY" target="_blank">Read The Order of Corruption</a></p>
-  </section>
-</div>
+  <div class="tab-content" id="the-world">
+    <section>
+      <h2>Main Characters</h2>
+      <p><strong>Glow:</strong> The power system of the story. It is the manifestation of both the mind and the heart.</p>
+      <p><strong>Enemies:</strong> Throughout the story, the main characters come up against many foes, such as the Karlam Military or other criminals!</p>
+      <p><strong>Locations:</strong> The story takes place on a continent named Trikion. The main countries of Trikion are Karlam, Shenghua, Frenkon and Icium. There is a few other smaller countries and even more cities in each that the story will mention!</p>
+    </section>
+  </div>
 
-<div class="tab-content" id="The World">
-  <section>
-    <h2>Main Characters</h2>
-    <p><strong>Glow:</strong> The power system of the story. It is the manifestation of both the mind and the heart.</p>
-    <p><strong>Enemies:</strong> Throughout the story, the main characters come up against many foes, such as the Karlam Military or other criminals!</p>
-    <p><strong>Locations:</strong> The story takes place on a continent named Trikion. The main countries of Trikion are Karlam, Shenghua, Frenkon and Icium. There is a few other smaller countries and even more cities in each that the story will mention!</p>
-    <!-- Add more characters -->
-  </section>
-</div>
+  <div class="tab-content" id="tierlist">
+    <section>
+      <h2>Character Tier List</h2>
 
-<div class="tab-content" id="tierlist">
-  <section>
-    <h2>Character Tier List</h2>
+      <div class="tier"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
+      <div class="tier"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
+      <div class="tier"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
+      <div class="tier"><div class="tier-label">D</div><div class="drop-zone" data-tier="D"></div></div>
+      <div class="tier"><div class="tier-label">E</div><div class="drop-zone" data-tier="E"></div></div>
+      <div class="tier"><div class="tier-label">F</div><div class="drop-zone" data-tier="F"></div></div>
 
-    <!-- Tier Boxes -->
-    <div class="tier"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
-    <div class="tier"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
-    <div class="tier"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
-    <div class="tier"><div class="tier-label">D</div><div class="drop-zone" data-tier="D"></div></div>
-    <div class="tier"><div class="tier-label">E</div><div class="drop-zone" data-tier="E"></div></div>
-    <div class="tier"><div class="tier-label">F</div><div class="drop-zone" data-tier="F"></div></div>
-
-    <!-- Item Pool -->
-    <div style="margin-top: 30px;">
-      <h3>Characters:</h3>
-      <div class="drop-zone" id="item-pool">
-        <div class="item" draggable="true">Han</div>
-        <div class="item" draggable="true">Chiz</div>
-        <div class="item" draggable="true">Oswald</div>
-        <div class="item" draggable="true">Corin</div>
-        <div class="item" draggable="true">York</div>
-        <div class="item" draggable="true">Gronkle</div>
-        <div class="item" draggable="true">Butcher</div>
-        <div class="item" draggable="true">Mikael</div>
-        <div class="item" draggable="true">Patrice</div>
-        <div class="item" draggable="true">Veroner</div>
-        <div class="item" draggable="true">Sehar</div>
-        <div class="item" draggable="true">Gorm</div>
-        <div class="item" draggable="true">Berthold</div>
-        <div class="item" draggable="true">Drapes</div>
-        <div class="item" draggable="true">Gerona</div>
-        <div class="item" draggable="true">Kaito</div>
-        <div class="item" draggable="true">Victor</div>
-        <div class="item" draggable="true">Bidon</div>
-        <div class="item" draggable="true">Tory</div>
-        <div class="item" draggable="true">Beke</div>
-        <div class="item" draggable="true">Matheus</div>
+      <div style="margin-top: 30px;">
+        <h3>Characters:</h3>
+        <div class="drop-zone" id="item-pool">
+          <div class="item" draggable="true">Han</div>
+          <div class="item" draggable="true">Chiz</div>
+          <div class="item" draggable="true">Oswald</div>
+          <div class="item" draggable="true">Corin</div>
+          <div class="item" draggable="true">York</div>
+          <div class="item" draggable="true">Gronkle</div>
+          <div class="item" draggable="true">Butcher</div>
+          <div class="item" draggable="true">Mikael</div>
+          <div class="item" draggable="true">Patrice</div>
+          <div class="item" draggable="true">Veroner</div>
+          <div class="item" draggable="true">Sehar</div>
+          <div class="item" draggable="true">Gorm</div>
+          <div class="item" draggable="true">Berthold</div>
+          <div class="item" draggable="true">Drapes</div>
+          <div class="item" draggable="true">Gerona</div>
+          <div class="item" draggable="true">Kaito</div>
+          <div class="item" draggable="true">Victor</div>
+          <div class="item" draggable="true">Bidon</div>
+          <div class="item" draggable="true">Tory</div>
+          <div class="item" draggable="true">Beke</div>
+          <div class="item" draggable="true">Matheus</div>
+        </div>
       </div>
-    </div>
+    </section>
+  </div>
 
-  </section>
-</div>
+  <div class="tab-content" id="clicker-game">
+    <section>
+      <h2>Calors Clicker</h2>
+      <p>Click the button below to earn <strong>Calors</strong>, the currency of The Order of Corruption!</p>
+      <h3>Calors: <span id="calor-count">0</span></h3>
+      <button id="calor-button">Earn Calors</button>
+    </section>
+  </div>
 
-<!-- Clicker Game -->
-<div class="tab-content" id="clicker-game">
-  <section>
-    <h2>Calors Clicker</h2>
-    <p>Click the button below to earn <strong>Calors</strong>, the currency of The Order of Corruption!</p>
-    <h3>Calors: <span id="calor-count">0</span></h3>
-    <button id="calor-button">Earn Calors</button>
-  </section>
-</div>
+  <script>
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
 
-
-
-<script>
-  const tabs = document.querySelectorAll('.tab-btn');
-  const contents = document.querySelectorAll('.tab-content');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
     });
-  });
 
-const tierItems = document.querySelectorAll('.item');
-const tierZones = document.querySelectorAll('.drop-zone');
+    const tierItems = document.querySelectorAll('.item');
+    const tierZones = document.querySelectorAll('.drop-zone');
 
-let draggedItem = null;
+    let draggedItem = null;
 
-tierItems.forEach(item => {
-  item.addEventListener('dragstart', () => {
-    draggedItem = item;
-    item.classList.add('dragging');
-  });
+    tierItems.forEach(item => {
+      item.addEventListener('dragstart', () => {
+        draggedItem = item;
+        item.classList.add('dragging');
+      });
 
-  item.addEventListener('dragend', () => {
-    draggedItem = null;
-    item.classList.remove('dragging');
-  });
-});
+      item.addEventListener('dragend', () => {
+        draggedItem = null;
+        item.classList.remove('dragging');
+      });
+    });
 
-tierZones.forEach(zone => {
-  zone.addEventListener('dragover', e => {
-    e.preventDefault();
-    zone.classList.add('over');
-  });
+    tierZones.forEach(zone => {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('over');
+      });
 
-  zone.addEventListener('dragleave', () => {
-    zone.classList.remove('over');
-  });
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('over');
+      });
 
-  zone.addEventListener('drop', () => {
-    if (draggedItem) {
-      zone.appendChild(draggedItem);
-    }
-    zone.classList.remove('over');
-  });
-});
+      zone.addEventListener('drop', () => {
+        if (draggedItem) {
+          zone.appendChild(draggedItem);
+        }
+        zone.classList.remove('over');
+      });
+    });
 
-<script>
-  let calors = 0;
-  const calorCount = document.getElementById('calor-count');
-  const calorButton = document.getElementById('calor-button');
+    let calors = 0;
+    const calorCount = document.getElementById('calor-count');
+    const calorButton = document.getElementById('calor-button');
 
-  calorButton.addEventListener('click', () => {
-    calors++;
-    calorCount.textContent = calors;
-  });
-</script>
-  
-</script>
+    calorButton.addEventListener('click', () => {
+      calors++;
+      calorCount.textContent = calors;
+    });
+  </script>
 
 </body>
 </html>
