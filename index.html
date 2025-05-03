@@ -112,6 +112,59 @@
         align-items: center;
       }
     }
+
+    .tier {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 10px;
+  background: #2a2a2a;
+}
+
+.tier-label {
+  width: 60px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.drop-zone {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 60px;
+  padding: 10px;
+  background-color: #333;
+  border-radius: 8px;
+}
+
+.item {
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+  background-color: #4caf50;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 60px;
+  cursor: move;
+  user-select: none;
+  font-weight: bold;
+}
+
+.item.dragging {
+  opacity: 0.5;
+}
+
+.drop-zone.over {
+  border: 2px dashed #aaa;
+}
+
+
+
+    
   </style>
 </head>
 <body>
@@ -124,6 +177,7 @@
   <button class="tab-btn active" data-tab="home">Home</button>
   <button class="tab-btn" data-tab="chapters">The Story</button>
   <button class="tab-btn" data-tab="The World">The World</button>
+  <button class="tab-btn" data-tab="tierlist">Tier List</button>
 </nav>
 
 <div class="tab-content active" id="home">
@@ -157,6 +211,50 @@
   </section>
 </div>
 
+<div class="tab-content" id="tierlist">
+  <section>
+    <h2>Character Tier List</h2>
+
+    <!-- Tier Boxes -->
+    <div class="tier"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
+    <div class="tier"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
+    <div class="tier"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
+    <div class="tier"><div class="tier-label">D</div><div class="drop-zone" data-tier="D"></div></div>
+    <div class="tier"><div class="tier-label">E</div><div class="drop-zone" data-tier="E"></div></div>
+    <div class="tier"><div class="tier-label">F</div><div class="drop-zone" data-tier="F"></div></div>
+
+    <!-- Item Pool -->
+    <div style="margin-top: 30px;">
+      <h3>Characters:</h3>
+      <div class="drop-zone" id="item-pool">
+        <div class="item" draggable="true">Han</div>
+        <div class="item" draggable="true">Chiz</div>
+        <div class="item" draggable="true">Oswald</div>
+        <div class="item" draggable="true">Corin</div>
+        <div class="item" draggable="true">York</div>
+        <div class="item" draggable="true">Gronkle</div>
+        <div class="item" draggable="true">Butcher</div>
+        <div class="item" draggable="true">Mikael</div>
+        <div class="item" draggable="true">Patrice</div>
+        <div class="item" draggable="true">Veroner</div>
+        <div class="item" draggable="true">Sehar</div>
+        <div class="item" draggable="true">Gorm</div>
+        <div class="item" draggable="true">Berthold</div>
+        <div class="item" draggable="true">Drapes</div>
+        <div class="item" draggable="true">Gerona</div>
+        <div class="item" draggable="true">Kaito</div>
+        <div class="item" draggable="true">Victor</div>
+        <div class="item" draggable="true">Bidon</div>
+        <div class="item" draggable="true">Tory</div>
+        <div class="item" draggable="true">Beke</div>
+        <div class="item" draggable="true">Matheus</div>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+
 
 <script>
   const tabs = document.querySelectorAll('.tab-btn');
@@ -171,6 +269,43 @@
       document.getElementById(tab.dataset.tab).classList.add('active');
     });
   });
+
+const tierItems = document.querySelectorAll('.item');
+const tierZones = document.querySelectorAll('.drop-zone');
+
+let draggedItem = null;
+
+tierItems.forEach(item => {
+  item.addEventListener('dragstart', () => {
+    draggedItem = item;
+    item.classList.add('dragging');
+  });
+
+  item.addEventListener('dragend', () => {
+    draggedItem = null;
+    item.classList.remove('dragging');
+  });
+});
+
+tierZones.forEach(zone => {
+  zone.addEventListener('dragover', e => {
+    e.preventDefault();
+    zone.classList.add('over');
+  });
+
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('over');
+  });
+
+  zone.addEventListener('drop', () => {
+    if (draggedItem) {
+      zone.appendChild(draggedItem);
+    }
+    zone.classList.remove('over');
+  });
+});
+
+  
 </script>
 
 </body>
