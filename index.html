@@ -700,17 +700,12 @@
   }
 
   const itemsDB = {
-    common: ["Tory", "Drapes", "Sehar", "Garbona"],
-    uncommon: ["Berthold", "Gronkle", "York", "Seren", "Ade", "Ata"],
+    common: ["Tory", "Drapes", "Sehar", "Garbona"], // Added Garbona to common
+    uncommon: ["Berthold", "Gronkle", "York", "Ade", "Seren", "Ata"], // Added Ade, Seren, Ata to uncommon
     rare: ["Bidon", "Victor", "Veroner", "Mikael", "Beke", "Matheus"],
     epic: ["Gorm", "Patrice", "Oswald", "Kaito", "Butcher"],
     legendary: ["Han", "Chiz", "Corin"]
   };
-
-  document.getElementById('calor-button').addEventListener('click', () => {
-    calors += calorPerClick;
-    updateCalorDisplay();
-  });
 
   document.getElementById('buy-pack').addEventListener('click', function() {
     if (calors >= 150) {
@@ -719,22 +714,40 @@
       const roll = Math.random() * 100;
       let rarity, item;
       
-      if (roll < 60) rarity = 'common';
-      else if (roll < 90) rarity = 'uncommon';
-      else if (roll < 97) rarity = 'rare';
-      else if (roll < 99.5) rarity = 'epic';
-      else rarity = 'legendary';
+      // Drop rates matching your displayed percentages
+      if (roll < 60) { // 60% chance
+        rarity = 'common';
+      } else if (roll < 90) { // 30% chance (60-90)
+        rarity = 'uncommon';
+      } else if (roll < 97) { // 7% chance (90-97)
+        rarity = 'rare';
+      } else if (roll < 99.5) { // 2.5% chance (97-99.5)
+        rarity = 'epic';
+      } else { // 0.5% chance (99.5-100)
+        rarity = 'legendary';
+      }
       
-      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+      // Get random item from selected rarity
+      const possibleItems = itemsDB[rarity];
+      item = possibleItems[Math.floor(Math.random() * possibleItems.length)];
+      
+      // Add to inventory
       inventory.push({ name: item, rarity: rarity });
       
+      // Save and update displays
       localStorage.setItem('inventory', JSON.stringify(inventory));
       updateCalorDisplay();
       updateInventoryDisplay();
       
-      alert(rarity === 'legendary' 
-        ? `LEGENDARY FIND! ★★★★★\n${item}` 
-        : `You found: ${item} (${rarity.toUpperCase()})`);
+      // Show appropriate alert
+      const rarityNames = {
+        common: "COMMON",
+        uncommon: "UNCOMMON", 
+        rare: "RARE",
+        epic: "EPIC",
+        legendary: "LEGENDARY ★★★★★"
+      };
+      alert(`You found: ${item} (${rarityNames[rarity]})`);
     } else {
       alert("You need 150 Calors to buy a pack!");
     }
