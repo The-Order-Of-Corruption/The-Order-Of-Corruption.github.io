@@ -209,6 +209,66 @@
       font-size: 24px;
       color: #00ffcc;
     }
+    
+    .clicker-container {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .main-clicker {
+      flex: 2;
+    }
+    
+    .drop-rates {
+      flex: 1;
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    
+    .rarity-tier {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #333;
+    }
+    
+    .rarity-tier h4 {
+      margin: 10px 0 5px 0;
+      color: #fff;
+    }
+    
+    .rarity-tier.common h4 { color: #ffffff; }
+    .rarity-tier.uncommon h4 { color: #4caf50; }
+    .rarity-tier.rare h4 { color: #2196f3; }
+    .rarity-tier.epic h4 { color: #9c27b0; }
+    .rarity-tier.legendary h4 { 
+      color: #ff9800;
+      text-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+    }
+    
+    /* Item rarity colors */
+    .item-card.common { border-left: 4px solid #ffffff; }
+    .item-card.uncommon { border-left: 4px solid #4caf50; }
+    .item-card.rare { border-left: 4px solid #2196f3; }
+    .item-card.epic { 
+      border-left: 4px solid #9c27b0;
+      background: rgba(156, 39, 176, 0.1);
+    }
+    .item-card.legendary {
+      border-left: 4px solid #ff9800;
+      background: rgba(255, 152, 0, 0.1);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,152,0,0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(255,152,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); }
+    }
+    
   </style>
 </head>
 <body>
@@ -300,14 +360,71 @@
     </section>
   </div>
 
-  <div class="tab-content" id="clicker-game">
-    <section>
-      <h2>Calors Clicker</h2>
-      <p>Click the button below to earn <strong>Calors</strong>, the currency of The Order of Corruption!</p>
-      <h3>Calors: <span id="calor-count">0</span></h3>
-      <button id="calor-button">Earn Calors</button>
-    </section>
-  </div>
+  
+<div class="tab-content" id="clicker-game">
+  <section>
+    <div class="clicker-container">
+      <div class="main-clicker">
+        <h2>Calors Clicker</h2>
+        <p>Click to earn <strong>Calors</strong> and buy magical items!</p>
+        <h3>Calors: <span id="calor-count">0</span></h3>
+        <button id="calor-button">Earn Calors</button>
+        
+        <div class="shop-section">
+          <button id="buy-pack">Buy Mystery Pack (250 Calors)</button>
+          <h3>Your Collection:</h3>
+          <div id="item-display"></div>
+        </div>
+      </div>
+      
+      <!-- NEW DROP RATES PANEL -->
+      <div class="drop-rates">
+        <h3>Possible Drops:</h3>
+        <div class="rarity-tier common">
+          <h4>Common (60%)</h4>
+          <ul>
+            <li>Wooden Sword</li>
+            <li>Wooden Shield</li>
+            <li>Squirrel Pet</li>
+          </ul>
+        </div>
+        <div class="rarity-tier uncommon">
+          <h4>Uncommon (30%)</h4>
+          <ul>
+            <li>Shortsword</li>
+            <li>Dog Pet</li>
+            <li>Dagger</li>
+          </ul>
+        </div>
+        <div class="rarity-tier rare">
+          <h4>Rare (7%)</h4>
+          <ul>
+            <li>Longsword</li>
+            <li>Bloody Dagger</li>
+            <li>Bull Pet</li>
+          </ul>
+        </div>
+        <div class="rarity-tier epic">
+          <h4>Epic (2.5%)</h4>
+          <ul>
+            <li>Glow Sword</li>
+            <li>Glow Shield</li>
+            <li>Glow Spear</li>
+            <li>Glow Axe</li>
+          </ul>
+        </div>
+        <div class="rarity-tier legendary">
+          <h4>Legendary (0.5%)</h4>
+          <ul>
+            <li>Stone Glow</li>
+            <li>Fire Glow</li>
+            <li>Ice Glow</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 
   <script>
   // Tab switching functionality
@@ -404,6 +521,76 @@
     document.getElementById('calor-count').textContent = calors;
     localStorage.setItem('calors', calors);
   });
+
+    // Updated item database with your requested items
+const items = {
+  common: [
+    "Wooden Sword", 
+    "Wooden Shield", 
+    "Squirrel Pet"
+  ],
+  uncommon: [
+    "Shortsword",
+    "Dog Pet",
+    "Dagger"
+  ],
+  rare: [
+    "Longsword",
+    "Bloody Dagger",
+    "Bull Pet"
+  ],
+  epic: [
+    "Glow Sword",
+    "Glow Shield",
+    "Glow Spear",
+    "Glow Axe"
+  ],
+  legendary: [
+    "Stone Glow",
+    "Fire Glow",
+    "Ice Glow"
+  ]
+};
+
+// Updated buy function with your drop rates
+document.getElementById('buy-pack').addEventListener('click', function() {
+  if (calors >= 250) {
+    calors -= 250;
+    updateCalorDisplay();
+    
+    const roll = Math.random() * 100;
+    let rarity, item;
+    
+    if (roll < 60) {
+      rarity = 'common';
+    } else if (roll < 90) { // 30% (60-90)
+      rarity = 'uncommon';
+    } else if (roll < 97) { // 7% (90-97)
+      rarity = 'rare';
+    } else if (roll < 99.5) { // 2.5% (97-99.5)
+      rarity = 'epic';
+    } else { // 0.5% (99.5-100)
+      rarity = 'legendary';
+    }
+    
+    item = items[rarity][Math.floor(Math.random() * items[rarity].length)];
+    inventory.push({ name: item, rarity: rarity });
+    
+    localStorage.setItem('inventory', JSON.stringify(inventory));
+    updateInventoryDisplay();
+    
+    // Special alert for legendary items
+    if (rarity === 'legendary') {
+      alert(`LEGENDARY FIND! You got: ${item} ★★★★★`);
+    } else {
+      alert(`You found: ${item} (${rarity.toUpperCase()})`);
+    }
+  } else {
+    alert("You need 250 Calors to buy a pack!");
+  }
+});
+
+// Rest of your existing JavaScript remains the same
 
   // Load saved positions when page loads
   window.addEventListener('load', loadPositions);
