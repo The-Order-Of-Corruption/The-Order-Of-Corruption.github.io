@@ -441,8 +441,6 @@
   // Tab switching functionality
   const tabs = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
-    // Player inventory
-let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -454,11 +452,11 @@ let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
   });
 
   // Tier List Drag and Drop Functionality
-  const items = document.querySelectorAll('.item');
+  const tierItems = document.querySelectorAll('#tierlist .item');
   const dropZones = document.querySelectorAll('.drop-zone');
 
   // Make items draggable
-  items.forEach(item => {
+  tierItems.forEach(item => {
     item.addEventListener('dragstart', () => {
       item.classList.add('dragging');
     });
@@ -506,7 +504,7 @@ let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
       Object.keys(positions).forEach(tier => {
         const zone = document.querySelector(`[data-tier="${tier}"]`);
         positions[tier].forEach(charName => {
-          const item = [...document.querySelectorAll('.item')].find(el => el.textContent === charName);
+          const item = [...document.querySelectorAll('#tierlist .item')].find(el => el.textContent === charName);
           if (item) zone.appendChild(item);
         });
       });
@@ -516,7 +514,7 @@ let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
   // Reset tier list to default
   function resetTierList() {
     const itemPool = document.getElementById('item-pool');
-    document.querySelectorAll('.item').forEach(item => {
+    document.querySelectorAll('#tierlist .item').forEach(item => {
       itemPool.appendChild(item);
     });
     localStorage.removeItem('tierListPositions');
@@ -525,141 +523,87 @@ let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
   // Set up reset button
   document.getElementById('reset-tierlist').addEventListener('click', resetTierList);
 
+  // Player inventory
+  let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+  
   // Calor Clicker Game
   let calors = parseInt(localStorage.getItem('calors')) || 0;
-  document.getElementById('calor-count').textContent = calors;
   
-  document.getElementById('calor-button').addEventListener('click', () => {
-    calors++;
+  // Update inventory display
+  function updateInventoryDisplay() {
+    const display = document.getElementById('item-display');
+    display.innerHTML = '';
+    
+    if (inventory.length === 0) {
+      display.innerHTML = '<p>No items yet. Buy some packs!</p>';
+      return;
+    }
+    
+    inventory.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `item-card ${item.rarity}`;
+      card.textContent = item.name;
+      display.appendChild(card);
+    });
+  }
+
+  // Update calor display and shop button
+  function updateCalorDisplay() {
     document.getElementById('calor-count').textContent = calors;
     localStorage.setItem('calors', calors);
-  });
-
-    // Update inventory display
-function updateInventoryDisplay() {
-  const display = document.getElementById('item-display');
-  display.innerHTML = '';
-  
-  if (inventory.length === 0) {
-    display.innerHTML = '<p>No items yet. Buy some packs!</p>';
-    return;
+    document.getElementById('buy-pack').disabled = calors < 250;
   }
-  
-  inventory.forEach(item => {
-    const card = document.createElement('div');
-    card.className = `item-card ${item.rarity}`;
-    card.textContent = item.name;
-    display.appendChild(card);
-  });
-}
 
-// Proper calor display function
-function updateCalorDisplay() {
-  document.getElementById('calor-count').textContent = calors;
-  localStorage.setItem('calors', calors);
-  updateShopButton();
-}
+  // Item database
+  const itemsDB = {
+    common: ["Wooden Sword", "Wooden Shield", "Squirrel Pet"],
+    uncommon: ["Shortsword", "Dog Pet", "Dagger"],
+    rare: ["Longsword", "Bloody Dagger", "Bull Pet"],
+    epic: ["Glow Sword", "Glow Shield", "Glow Spear", "Glow Axe"],
+    legendary: ["Stone Glow", "Fire Glow", "Ice Glow"]
+  };
 
-// Shop button state
-function updateShopButton() {
-  document.getElementById('buy-pack').disabled = calors < 250;
-}
-
-    // Updated item database with your requested items
-const items = {
-  common: [
-    "Wooden Sword", 
-    "Wooden Shield", 
-    "Squirrel Pet"
-  ],
-  uncommon: [
-    "Shortsword",
-    "Dog Pet",
-    "Dagger"
-  ],
-  rare: [
-    "Longsword",
-    "Bloody Dagger",
-    "Bull Pet"
-  ],
-  epic: [
-    "Glow Sword",
-    "Glow Shield",
-    "Glow Spear",
-    "Glow Axe"
-  ],
-  legendary: [
-    "Stone Glow",
-    "Fire Glow",
-    "Ice Glow"
-  ]
-};
-
-// Updated buy function with your drop rates
-document.getElementById('buy-pack').addEventListener('click', function() {
-  if (calors >= 250) {
-    calors -= 250;
+  // Calor button click
+  document.getElementById('calor-button').addEventListener('click', () => {
+    calors++;
     updateCalorDisplay();
-    
-    const roll = Math.random() * 100;
-    let rarity, item;
-    
-    if (roll < 60) {
-      rarity = 'common';
-    } else if (roll < 90) { // 30% (60-90)
-      rarity = 'uncommon';
-    } else if (roll < 97) { // 7% (90-97)
-      rarity = 'rare';
-    } else if (roll < 99.5) { // 2.5% (97-99.5)
-      rarity = 'epic';
-    } else { // 0.5% (99.5-100)
-      rarity = 'legendary';
-    }
-    
-    item = items[rarity][Math.floor(Math.random() * items[rarity].length)];
-    inventory.push({ name: item, rarity: rarity });
-    
-    localStorage.setItem('inventory', JSON.stringify(inventory));
-    updateInventoryDisplay();
-    
-    // Special alert for legendary items
-    if (rarity === 'legendary') {
-      alert(`LEGENDARY FIND! You got: ${item} ★★★★★`);
-    } else {
-      alert(`You found: ${item} (${rarity.toUpperCase()})`);
-    }
-  } else {
-    alert("You need 250 Calors to buy a pack!");
-  }
-});
-
-// Initialize displays
-updateInventoryDisplay();
-updateShopButton();
-// Rest of your existing JavaScript remains the same
-
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
-
-  tabButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      // Remove active class from all buttons
-      tabButtons.forEach(btn => btn.classList.remove("active"));
-      // Add active class to clicked button
-      button.classList.add("active");
-
-      // Hide all tab contents
-      tabContents.forEach(tab => tab.classList.remove("active"));
-
-      // Show the selected tab content
-      const tabId = button.getAttribute("data-tab");
-      document.getElementById(tabId).classList.add("active");
-    });
   });
 
+  // Buy pack function
+  document.getElementById('buy-pack').addEventListener('click', function() {
+    if (calors >= 250) {
+      calors -= 250;
+      
+      const roll = Math.random() * 100;
+      let rarity, item;
+      
+      if (roll < 60) rarity = 'common';
+      else if (roll < 90) rarity = 'uncommon';
+      else if (roll < 97) rarity = 'rare';
+      else if (roll < 99.5) rarity = 'epic';
+      else rarity = 'legendary';
+      
+      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+      inventory.push({ name: item, rarity: rarity });
+      
+      localStorage.setItem('inventory', JSON.stringify(inventory));
+      updateCalorDisplay();
+      updateInventoryDisplay();
+      
+      alert(rarity === 'legendary' 
+        ? `LEGENDARY FIND! ★★★★★\n${item}` 
+        : `You found: ${item} (${rarity.toUpperCase()})`);
+    } else {
+      alert("You need 250 Calors to buy a pack!");
+    }
+  });
 
-  // Load saved positions when page loads 
-  window.addEventListener('load', loadPositions);
+  // Initialize everything when page loads
+  window.addEventListener('load', () => {
+    loadPositions();
+    updateCalorDisplay();
+    updateInventoryDisplay();
+  });
 </script>
 
   
