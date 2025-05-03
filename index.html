@@ -544,7 +544,7 @@
   // Calor Clicker Game
   let calors = parseInt(localStorage.getItem('calors')) || 0;
   
-  // Update inventory display
+ // Update inventory display
   function updateInventoryDisplay() {
     const display = document.getElementById('item-display');
     display.innerHTML = '';
@@ -554,13 +554,32 @@
       return;
     }
     
+    // Count item quantities
+    const itemCounts = {};
     inventory.forEach(item => {
+      const key = `${item.name}|${item.rarity}`;
+      itemCounts[key] = (itemCounts[key] || 0) + 1;
+    });
+    
+    // Create array of unique items with counts
+    const uniqueItems = Object.keys(itemCounts).map(key => {
+      const [name, rarity] = key.split('|');
+      return { name, rarity, count: itemCounts[key] };
+    });
+    
+    // Sort by rarity (legendary first, then epic, etc.)
+    const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+    uniqueItems.sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity]);
+    
+    // Display each unique item with count
+    uniqueItems.forEach(item => {
       const card = document.createElement('div');
       card.className = `item-card ${item.rarity}`;
-      card.textContent = item.name;
+      card.textContent = `${item.name} ×${item.count}`;
       display.appendChild(card);
     });
   }
+
 
   // Update calor display and shop button
   function updateCalorDisplay() {
@@ -584,34 +603,33 @@
     updateCalorDisplay();
   });
 
-  // Buy pack function
   document.getElementById('buy-pack').addEventListener('click', function() {
-    if (calors >= 150) {
-      calors -= 150;
-      
-      const roll = Math.random() * 100;
-      let rarity, item;
-      
-      if (roll < 60) rarity = 'common';
-      else if (roll < 90) rarity = 'uncommon';
-      else if (roll < 97) rarity = 'rare';
-      else if (roll < 99.5) rarity = 'epic';
-      else rarity = 'legendary';
-      
-      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
-      inventory.push({ name: item, rarity: rarity });
-      
-      localStorage.setItem('inventory', JSON.stringify(inventory));
-      updateCalorDisplay();
-      updateInventoryDisplay();
-      
-      alert(rarity === 'legendary' 
-        ? `LEGENDARY FIND! ★★★★★\n${item}` 
-        : `You found: ${item} (${rarity.toUpperCase()})`);
-    } else {
-      alert("You need 150 Calors to buy a pack!");
-    }
-  });
+  if (calors >= 150) {
+    calors -= 150;
+    
+    const roll = Math.random() * 100;
+    let rarity, item;
+    
+    if (roll < 60) rarity = 'common';
+    else if (roll < 90) rarity = 'uncommon';
+    else if (roll < 97) rarity = 'rare';
+    else if (roll < 99.5) rarity = 'epic';
+    else rarity = 'legendary';
+    
+    item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+    inventory.push({ name: item, rarity: rarity });
+    
+    localStorage.setItem('inventory', JSON.stringify(inventory));
+    updateCalorDisplay();
+    updateInventoryDisplay();
+    
+    alert(rarity === 'legendary' 
+      ? `LEGENDARY FIND! ★★★★★\n${item}` 
+      : `You found: ${item} (${rarity.toUpperCase()})`);
+  } else {
+    alert("You need 150 Calors to buy a pack!");
+  }
+});
 
   // Initialize everything when page loads
   window.addEventListener('DOMContentLoaded', () => {
