@@ -712,8 +712,7 @@
     calors += calorPerClick;
     updateCalorDisplay();
   });
-
-  document.getElementById('buy-pack').addEventListener('click', function() {
+document.getElementById('buy-pack').addEventListener('click', function() {
     if (calors >= 150) {
       calors -= 150;
       
@@ -723,7 +722,7 @@
       if (roll < 60) {
         rarity = 'common';
       } else if (roll < 90) {
-        rarity = 'uncommon';
+        rarity = 'uncommon'; 
       } else if (roll < 97) {
         rarity = 'rare';
       } else if (roll < 99.5) {
@@ -733,20 +732,38 @@
       }
       
       item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+      
+      // Add to inventory
       inventory.push({ name: item, rarity: rarity });
       
+      // Save and update displays
       localStorage.setItem('inventory', JSON.stringify(inventory));
       updateCalorDisplay();
       updateInventoryDisplay();
       
-      const rarityNames = {
-        common: "COMMON",
-        uncommon: "UNCOMMON", 
-        rare: "RARE",
-        epic: "EPIC",
-        legendary: "LEGENDARY ★★★★★"
-      };
-      alert(`You found: ${item} (${rarityNames[rarity]})`);
+      // Show alert with proper formatting
+      let alertMessage = `You found: ${item}\n`;
+      alertMessage += `Rarity: `;
+      
+      switch(rarity) {
+        case 'common':
+          alertMessage += "Common";
+          break;
+        case 'uncommon':
+          alertMessage += "Uncommon ★";
+          break;
+        case 'rare':
+          alertMessage += "Rare ★★";
+          break;
+        case 'epic':
+          alertMessage += "Epic ★★★";
+          break;
+        case 'legendary':
+          alertMessage += "LEGENDARY ★★★★★";
+          break;
+      }
+      
+      alert(alertMessage);
     } else {
       alert("You need 150 Calors to buy a pack!");
     }
