@@ -495,328 +495,304 @@
   </div>
 
   <script>
- 
-    // Tab switching functionality
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
+  // Tab switching functionality
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab).classList.add('active');
     });
+  });
 
-    // Tier List Drag and Drop Functionality
-    const tierItems = document.querySelectorAll('#tierlist .item');
-    const dropZones = document.querySelectorAll('.drop-zone');
+  // Tier List Drag and Drop Functionality
+  const tierItems = document.querySelectorAll('#tierlist .item');
+  const dropZones = document.querySelectorAll('.drop-zone');
 
-    tierItems.forEach(item => {
-      item.addEventListener('dragstart', handleDragStart);
-      item.addEventListener('dragend', handleDragEnd);
-      item.addEventListener('touchstart', handleTouchStart, {passive: false});
-      item.addEventListener('touchend', handleTouchEnd, {passive: false});
-      item.addEventListener('touchmove', handleTouchMove, {passive: false});
-    });
+  tierItems.forEach(item => {
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragend', handleDragEnd);
+    item.addEventListener('touchstart', handleTouchStart, {passive: false});
+    item.addEventListener('touchend', handleTouchEnd, {passive: false});
+    item.addEventListener('touchmove', handleTouchMove, {passive: false});
+  });
 
-    dropZones.forEach(zone => {
-      zone.addEventListener('dragover', handleDragOver);
-      zone.addEventListener('dragleave', handleDragLeave);
-      zone.addEventListener('drop', handleDrop);
-      zone.addEventListener('touchmove', handleTouchMove, {passive: false});
-      zone.addEventListener('touchend', handleTouchEnd, {passive: false});
-    });
+  dropZones.forEach(zone => {
+    zone.addEventListener('dragover', handleDragOver);
+    zone.addEventListener('dragleave', handleDragLeave);
+    zone.addEventListener('drop', handleDrop);
+    zone.addEventListener('touchmove', handleTouchMove, {passive: false});
+    zone.addEventListener('touchend', handleTouchEnd, {passive: false});
+  });
 
-    let touchDraggedItem = null;
-    let touchStartX = 0;
-    let touchStartY = 0;
+  let touchDraggedItem = null;
+  let touchStartX = 0;
+  let touchStartY = 0;
 
-    function handleDragStart(e) {
-      this.classList.add('dragging');
-    }
+  function handleDragStart(e) {
+    this.classList.add('dragging');
+  }
 
-    function handleDragEnd() {
-      this.classList.remove('dragging');
+  function handleDragEnd() {
+    this.classList.remove('dragging');
+    savePositions();
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    this.classList.add('over');
+  }
+
+  function handleDragLeave() {
+    this.classList.remove('over');
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    const draggedItem = document.querySelector('.dragging');
+    if (draggedItem) {
+      this.appendChild(draggedItem);
+      this.classList.remove('over');
       savePositions();
     }
-
-    function handleDragOver(e) {
-      e.preventDefault();
-      this.classList.add('over');
-    }
-
-    function handleDragLeave() {
-      this.classList.remove('over');
-    }
-
-    function handleDrop(e) {
-      e.preventDefault();
-      const draggedItem = document.querySelector('.dragging');
-      if (draggedItem) {
-        this.appendChild(draggedItem);
-        this.classList.remove('over');
-        savePositions();
-      }
-    }
-
-    function handleTouchStart(e) {
-      e.preventDefault();
-      touchDraggedItem = this;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      this.classList.add('dragging');
-    }
-
-    function handleTouchMove(e) {
-      if (!touchDraggedItem) return;
-      e.preventDefault();
-      
-      const touch = e.touches[0];
-      const x = touch.clientX - touchStartX;
-      const y = touch.clientY - touchStartY;
-      
-      touchDraggedItem.style.transform = `translate(${x}px, ${y}px)`;
-      
-      const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
-      const dropZone = touchElement.closest('.drop-zone');
-      
-      dropZones.forEach(zone => zone.classList.remove('over'));
-      
-      if (dropZone) {
-        dropZone.classList.add('over');
-      }
-    }
-
-    function handleTouchEnd(e) {
-      if (!touchDraggedItem) return;
-      e.preventDefault();
-      
-      touchDraggedItem.style.transform = '';
-      touchDraggedItem.classList.remove('dragging');
-      
-      const touch = e.changedTouches[0];
-      const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
-      const dropZone = touchElement?.closest('.drop-zone');
-      
-      dropZones.forEach(zone => zone.classList.remove('over'));
-      
-      if (dropZone) {
-        dropZone.appendChild(touchDraggedItem);
-        savePositions();
-      }
-      
-      touchDraggedItem = null;
-    }
-
-    function savePositions() {
-      const positions = {};
-      dropZones.forEach(zone => {
-        positions[zone.dataset.tier] = Array.from(zone.children).map(item => item.textContent);
-      });
-      localStorage.setItem('tierListPositions', JSON.stringify(positions));
-    }
-
-    function loadPositions() {
-      const saved = localStorage.getItem('tierListPositions');
-      if (saved) {
-        const positions = JSON.parse(saved);
-        Object.keys(positions).forEach(tier => {
-          const zone = document.querySelector(`[data-tier="${tier}"]`);
-          positions[tier].forEach(charName => {
-            const item = [...document.querySelectorAll('#tierlist .item')].find(el => el.textContent === charName);
-            if (item) zone.appendChild(item);
-          });
-        });
-      }
-    }
-
-    function resetTierList() {
-      const itemPool = document.getElementById('item-pool');
-      document.querySelectorAll('#tierlist .item').forEach(item => {
-        itemPool.appendChild(item);
-      });
-      localStorage.removeItem('tierListPositions');
-    }
-
-    document.getElementById('reset-tierlist').addEventListener('click', resetTierList);
-
-    // Player inventory
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-    
-    // Calor Clicker Game
-    let calors = parseInt(localStorage.getItem('calors')) || 0;
-    let level = parseInt(localStorage.getItem('level')) || 1;
-    let calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
-    let levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
-    
-    function updateInventoryDisplay() {
-      const display = document.getElementById('item-display');
-      display.innerHTML = '';
-      
-      if (inventory.length === 0) {
-        display.innerHTML = '<p>No items yet. Buy some packs!</p>';
-        return;
-      }
-      
-      const itemCounts = {};
-      inventory.forEach(item => {
-        const key = `${item.name}|${item.rarity}`;
-        itemCounts[key] = (itemCounts[key] || 0) + 1;
-      });
-      
-      const uniqueItems = Object.keys(itemCounts).map(key => {
-        const [name, rarity] = key.split('|');
-        return { name, rarity, count: itemCounts[key] };
-      });
-      
-      const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
-      uniqueItems.sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity]);
-      
-      uniqueItems.forEach(item => {
-        const card = document.createElement('div');
-        card.className = `item-card ${item.rarity}`;
-        card.textContent = `${item.name} ×${item.count}`;
-        display.appendChild(card);
-      });
-    }
-
-    function updateCalorDisplay() {
-      document.getElementById('calor-count').textContent = calors;
-      localStorage.setItem('calors', calors);
-      document.getElementById('buy-pack').disabled = calors < 150;
-      document.getElementById('level-up').disabled = calors < levelUpCost || level >= 5;
-    }
-
-    const itemsDB = {
-      common: ["Tory", "Drapes", "Sehar"],
-      uncommon: ["Berthold", "Gronkle", "York"],
-      rare: ["Bidon", "Victor", "Veroner", "Mikael", "Beke", "Matheus"],
-      epic: ["Gorm", "Patrice", "Oswald", "Kaito", "Butcher"],
-      legendary: ["Han", "Chiz", "Corin"]
-    };
-
-    document.getElementById('calor-button').addEventListener('click', () => {
-      calors += calorPerClick;
-      updateCalorDisplay();
-    });
-
-    document.getElementById('buy-pack').addEventListener('click', function() {
-      if (calors >= 150) {
-        calors -= 150;
-        
-        const roll = Math.random() * 100;
-        let rarity, item;
-        
-        if (roll < 60) rarity = 'common';
-        else if (roll < 90) rarity = 'uncommon';
-        else if (roll < 97) rarity = 'rare';
-        else if (roll < 99.5) rarity = 'epic';
-        else rarity = 'legendary';
-        
-        item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
-        inventory.push({ name: item, rarity: rarity });
-        
-        localStorage.setItem('inventory', JSON.stringify(inventory));
-        updateCalorDisplay();
-        updateInventoryDisplay();
-        
-        alert(rarity === 'legendary' 
-          ? `LEGENDARY FIND! ★★★★★\n${item}` 
-          : `You found: ${item} (${rarity.toUpperCase()})`);
-      } else {
-        alert("You need 150 Calors to buy a pack!");
-      }
-    });
-
-    function levelUp() {
-      if (level >= 5) {
-        alert("You've reached the maximum level of 5!");
-        return;
-      }
-      
-      if (calors >= levelUpCost) {
-        calors -= levelUpCost;
-        level++;
-        calorPerClick++;
-        levelUpCost += 10;
-        
-        updateCalorDisplay();
-        updateLevelDisplay();
-        
-        if (level === 5) {
-          alert(`MAX LEVEL REACHED! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
-        } else {
-          alert(`Level Up! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
-        }
-      }
-    }
-
-// Update level display
-function updateLevelDisplay() {
-  document.getElementById('level').textContent = level;
-  document.getElementById('calor-per-click').textContent = calorPerClick;
-  document.getElementById('level-up-cost').textContent = levelUpCost; // This updates the displayed cost
-
-  if (level >= 5) {
-    document.getElementById('level-up').classList.add('max-level');
-    document.getElementById('level-up').textContent = "MAX LEVEL REACHED";
-  } else {
-    document.getElementById('level-up').classList.remove('max-level');
-    document.getElementById('level-up').textContent = `Level Up (Cost: ${levelUpCost} Calors)`;
   }
-  
-  document.getElementById('level-up').disabled = calors < levelUpCost || level >= 5;
-  
-  localStorage.setItem('level', level);
-  localStorage.setItem('calorPerClick', calorPerClick);
-  localStorage.setItem('levelUpCost', levelUpCost);
-}
 
+  function handleTouchStart(e) {
+    e.preventDefault();
+    touchDraggedItem = this;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    this.classList.add('dragging');
+  }
 
-
-
+  function handleTouchMove(e) {
+    if (!touchDraggedItem) return;
+    e.preventDefault();
     
-    function updateLevelDisplay() {
-      document.getElementById('level').textContent = level;
-      document.getElementById('calor-per-click').textContent = calorPerClick;
-      document.getElementById('level-up-cost').textContent = levelUpCost;
-
-      if (level >= 5) {
-        document.getElementById('level-up').classList.add('max-level');
-      } else {
-        document.getElementById('level-up').classList.remove('max-level');
-      }
-      
-      document.getElementById('level-up').disabled = calors < levelUpCost || level >= 5;
-      
-      if (level >= 5) {
-        document.getElementById('level-up').textContent = "MAX LEVEL REACHED";
-      } else {
-        document.getElementById('level-up').textContent = `Level Up (Cost: ${levelUpCost} Calors)`;
-      }
-      
-      localStorage.setItem('level', level);
-      localStorage.setItem('calorPerClick', calorPerClick);
-      localStorage.setItem('levelUpCost', levelUpCost);
+    const touch = e.touches[0];
+    const x = touch.clientX - touchStartX;
+    const y = touch.clientY - touchStartY;
+    
+    touchDraggedItem.style.transform = `translate(${x}px, ${y}px)`;
+    
+    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropZone = touchElement.closest('.drop-zone');
+    
+    dropZones.forEach(zone => zone.classList.remove('over'));
+    
+    if (dropZone) {
+      dropZone.classList.add('over');
     }
+  }
 
-    document.getElementById('level-up').addEventListener('click', levelUp);
+  function handleTouchEnd(e) {
+    if (!touchDraggedItem) return;
+    e.preventDefault();
+    
+    touchDraggedItem.style.transform = '';
+    touchDraggedItem.classList.remove('dragging');
+    
+    const touch = e.changedTouches[0];
+    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
+    const dropZone = touchElement?.closest('.drop-zone');
+    
+    dropZones.forEach(zone => zone.classList.remove('over'));
+    
+    if (dropZone) {
+      dropZone.appendChild(touchDraggedItem);
+      savePositions();
+    }
+    
+    touchDraggedItem = null;
+  }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      calors = parseInt(localStorage.getItem('calors')) || 0;
-      inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-      level = Math.min(parseInt(localStorage.getItem('level')) || 1, 5);
-      calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
-      levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
+  function savePositions() {
+    const positions = {};
+    dropZones.forEach(zone => {
+      positions[zone.dataset.tier] = Array.from(zone.children).map(item => item.textContent);
+    });
+    localStorage.setItem('tierListPositions', JSON.stringify(positions));
+  }
+
+  function loadPositions() {
+    const saved = localStorage.getItem('tierListPositions');
+    if (saved) {
+      const positions = JSON.parse(saved);
+      Object.keys(positions).forEach(tier => {
+        const zone = document.querySelector(`[data-tier="${tier}"]`);
+        positions[tier].forEach(charName => {
+          const item = [...document.querySelectorAll('#tierlist .item')].find(el => el.textContent === charName);
+          if (item) zone.appendChild(item);
+        });
+      });
+    }
+  }
+
+  function resetTierList() {
+    const itemPool = document.getElementById('item-pool');
+    document.querySelectorAll('#tierlist .item').forEach(item => {
+      itemPool.appendChild(item);
+    });
+    localStorage.removeItem('tierListPositions');
+  }
+
+  document.getElementById('reset-tierlist').addEventListener('click', resetTierList);
+
+  // Player inventory
+  let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+  
+  // Calor Clicker Game
+  let calors = parseInt(localStorage.getItem('calors')) || 0;
+  let level = parseInt(localStorage.getItem('level')) || 1;
+  let calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
+  let levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
+  
+  function updateInventoryDisplay() {
+    const display = document.getElementById('item-display');
+    display.innerHTML = '';
+    
+    if (inventory.length === 0) {
+      display.innerHTML = '<p>No items yet. Buy some packs!</p>';
+      return;
+    }
+    
+    const itemCounts = {};
+    inventory.forEach(item => {
+      const key = `${item.name}|${item.rarity}`;
+      itemCounts[key] = (itemCounts[key] || 0) + 1;
+    });
+    
+    const uniqueItems = Object.keys(itemCounts).map(key => {
+      const [name, rarity] = key.split('|');
+      return { name, rarity, count: itemCounts[key] };
+    });
+    
+    const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+    uniqueItems.sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity]);
+    
+    uniqueItems.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `item-card ${item.rarity}`;
+      card.textContent = `${item.name} ×${item.count}`;
+      display.appendChild(card);
+    });
+  }
+
+  function updateCalorDisplay() {
+    document.getElementById('calor-count').textContent = calors;
+    localStorage.setItem('calors', calors);
+    document.getElementById('buy-pack').disabled = calors < 150;
+    updateLevelDisplay(); // This ensures the level up button state is updated
+  }
+
+  const itemsDB = {
+    common: ["Tory", "Drapes", "Sehar"],
+    uncommon: ["Berthold", "Gronkle", "York"],
+    rare: ["Bidon", "Victor", "Veroner", "Mikael", "Beke", "Matheus"],
+    epic: ["Gorm", "Patrice", "Oswald", "Kaito", "Butcher"],
+    legendary: ["Han", "Chiz", "Corin"]
+  };
+
+  document.getElementById('calor-button').addEventListener('click', () => {
+    calors += calorPerClick;
+    updateCalorDisplay();
+  });
+
+  document.getElementById('buy-pack').addEventListener('click', function() {
+    if (calors >= 150) {
+      calors -= 150;
       
+      const roll = Math.random() * 100;
+      let rarity, item;
+      
+      if (roll < 60) rarity = 'common';
+      else if (roll < 90) rarity = 'uncommon';
+      else if (roll < 97) rarity = 'rare';
+      else if (roll < 99.5) rarity = 'epic';
+      else rarity = 'legendary';
+      
+      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+      inventory.push({ name: item, rarity: rarity });
+      
+      localStorage.setItem('inventory', JSON.stringify(inventory));
       updateCalorDisplay();
       updateInventoryDisplay();
+      
+      alert(rarity === 'legendary' 
+        ? `LEGENDARY FIND! ★★★★★\n${item}` 
+        : `You found: ${item} (${rarity.toUpperCase()})`);
+    } else {
+      alert("You need 150 Calors to buy a pack!");
+    }
+  });
+
+  function levelUp() {
+    if (level >= 5) {
+      alert("You've reached the maximum level of 5!");
+      return;
+    }
+    
+    if (calors >= levelUpCost) {
+      calors -= levelUpCost;
+      level++;
+      calorPerClick++;
+      levelUpCost += 10;
+      
+      updateCalorDisplay();
       updateLevelDisplay();
-      loadPositions();
-    });
-  
+      
+      if (level === 5) {
+        alert(`MAX LEVEL REACHED! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
+      } else {
+        alert(`Level Up! You're now level ${level} and earn ${calorPerClick} Calors per click!`);
+      }
+    }
+  }
+
+  // Single updateLevelDisplay function
+  function updateLevelDisplay() {
+    const levelUpBtn = document.getElementById('level-up');
+    const costDisplay = document.getElementById('level-up-cost');
+    
+    // Update all displays
+    document.getElementById('level').textContent = level;
+    document.getElementById('calor-per-click').textContent = calorPerClick;
+    costDisplay.textContent = levelUpCost;
+
+    // Update button state and appearance
+    if (level >= 5) {
+      levelUpBtn.classList.add('max-level');
+      levelUpBtn.textContent = "MAX LEVEL REACHED";
+      levelUpBtn.disabled = true;
+    } else {
+      levelUpBtn.classList.remove('max-level');
+      levelUpBtn.textContent = `Level Up (Cost: ${levelUpCost} Calors)`;
+      levelUpBtn.disabled = calors < levelUpCost;
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('level', level);
+    localStorage.setItem('calorPerClick', calorPerClick);
+    localStorage.setItem('levelUpCost', levelUpCost);
+  }
+
+  document.getElementById('level-up').addEventListener('click', levelUp);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    calors = parseInt(localStorage.getItem('calors')) || 0;
+    inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    level = Math.min(parseInt(localStorage.getItem('level')) || 1, 5);
+    calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
+    levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
+    
+    updateCalorDisplay();
+    updateInventoryDisplay();
+    updateLevelDisplay();
+    loadPositions();
+  });
 </script>
 </body>
 </html>
