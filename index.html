@@ -640,7 +640,35 @@ function updateInventoryDisplay() {
   });
 }
 
-window.addEventListener('load', () => {
+function updateCalorDisplay() {
+  console.log("Updating calor display...");  // Debugging log
+  document.getElementById('calor-count').textContent = calors;  // Display calor count
+  localStorage.setItem('calors', calors);  // Save to localStorage
+  document.getElementById('buy-pack').disabled = calors < 250;  // Disable buy button if not enough Calors
+}
+
+function updateInventoryDisplay() {
+  console.log("Updating inventory display...");  // Debugging log
+  const display = document.getElementById('item-display');
+  display.innerHTML = '';  // Clear previous items
+
+  if (inventory.length === 0) {
+    display.innerHTML = '<p>No items yet. Buy some packs!</p>';
+    return;
+  }
+
+  inventory.forEach(item => {
+    console.log("Adding item to display:", item);  // Debugging log
+    const card = document.createElement('div');
+    card.className = `item-card ${item.rarity}`;
+    card.textContent = item.name;
+    display.appendChild(card);
+  });
+}
+
+    
+
+window.addEventListener('DOMContentLoaded', () => {
   // Ensure inventory and calor values are initialized first before displaying
   inventory = JSON.parse(localStorage.getItem('inventory')) || [];
   calors = parseInt(localStorage.getItem('calors')) || 0;
