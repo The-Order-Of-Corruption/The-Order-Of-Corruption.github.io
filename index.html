@@ -227,6 +227,22 @@
       gap: 20px;
     }
     
+    .recent-pulls {
+      flex: 1;
+      background: #111;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    
+    .recent-pulls h3 {
+      margin-top: 0;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+    }
+    
     .main-clicker {
       flex: 2;
     }
@@ -260,6 +276,11 @@
       color: #ff9800;
       text-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
     }
+    .rarity-tier.mythical h4 {
+      color: #ff0000;
+      text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+      animation: pulse 1s infinite;
+    }
     
     /* Item rarity colors */
     .item-card.common { border-left: 4px solid #ffffff; }
@@ -274,11 +295,16 @@
       background: rgba(255, 152, 0, 0.1);
       animation: pulse 2s infinite;
     }
+    .item-card.mythical {
+      border-left: 4px solid #ff0000;
+      background: rgba(255, 0, 0, 0.1);
+      animation: pulse 0.5s infinite;
+    }
     
     @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,152,0,0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(255,152,0,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,152,0,0); }
+      0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(255,0,0,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,0,0,0); }
     }
 
     .item-card {
@@ -432,6 +458,11 @@
   <div class="tab-content" id="clicker-game">
     <section>
       <div class="clicker-container">
+        <div class="recent-pulls">
+          <h3>Recent Pulls</h3>
+          <div id="recent-pulls-display"></div>
+        </div>
+        
         <div class="main-clicker">
           <h2>Calors Clicker</h2>
           <p>Click to earn <strong>Calors</strong> and buy magical items!</p>
@@ -498,6 +529,14 @@
               <li>Han</li>
               <li>Chiz</li>
               <li>Corin</li>
+            </ul>
+          </div>
+          <div class="rarity-tier mythical">
+            <h4>Mythical (0.1%)</h4>
+            <ul>
+              <li>Don Acha</li>
+              <li>Taimoor</li>
+              <li>Reagan</li>
             </ul>
           </div>
         </div>
@@ -654,6 +693,7 @@
 
   // Player inventory
   let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+  let recentPulls = JSON.parse(localStorage.getItem('recentPulls')) || [];
   
   // Calor Clicker Game
   let calors = parseInt(localStorage.getItem('calors')) || 0;
@@ -661,6 +701,23 @@
   let calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
   let levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
   
+  function updateRecentPullsDisplay() {
+    const display = document.getElementById('recent-pulls-display');
+    display.innerHTML = '';
+    
+    if (recentPulls.length === 0) {
+      display.innerHTML = '<p>No recent pulls yet.</p>';
+      return;
+    }
+    
+    recentPulls.slice(0, 5).forEach(pull => {
+      const card = document.createElement('div');
+      card.className = `item-card ${pull.rarity}`;
+      card.textContent = `${pull.name} (${pull.rarity.toUpperCase()})`;
+      display.appendChild(card);
+    });
+  }
+
   function updateInventoryDisplay() {
     const display = document.getElementById('item-display');
     display.innerHTML = '';
@@ -681,7 +738,7 @@
       return { name, rarity, count: itemCounts[key] };
     });
     
-    const rarityOrder = { legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
+    const rarityOrder = { mythical: 6, legendary: 5, epic: 4, rare: 3, uncommon: 2, common: 1 };
     uniqueItems.sort((a, b) => rarityOrder[b.rarity] - rarityOrder[a.rarity]);
     
     uniqueItems.forEach(item => {
@@ -705,7 +762,8 @@
     uncommon: ["Berthold", "Gronkle", "York", "Ade", "Seren", "Ata"],
     rare: ["Bidon", "Victor", "Veroner", "Mikael", "Beke", "Matheus"],
     epic: ["Gorm", "Patrice", "Oswald", "Kaito", "Butcher"],
-    legendary: ["Han", "Chiz", "Corin"]
+    legendary: ["Han", "Chiz", "Corin"],
+    mythical: ["Don Acha", "Taimoor", "Reagan"]
   };
 
   document.getElementById('calor-button').addEventListener('click', function() {
@@ -728,16 +786,22 @@
         rarity = 'rare';
       } else if (roll < 99.5) {
         rarity = 'epic';
-      } else {
+      } else if (roll < 99.9) {
         rarity = 'legendary';
+      } else {
+        rarity = 'mythical';
       }
       
       item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
       inventory.push({ name: item, rarity: rarity });
+      recentPulls.unshift({ name: item, rarity: rarity });
+      if (recentPulls.length > 5) recentPulls.pop();
       
       localStorage.setItem('inventory', JSON.stringify(inventory));
+      localStorage.setItem('recentPulls', JSON.stringify(recentPulls));
       updateCalorDisplay();
       updateInventoryDisplay();
+      updateRecentPullsDisplay();
       
       // Create alert overlay
       const overlay = document.createElement('div');
@@ -769,6 +833,7 @@
       else if (rarity === 'rare') color = '#2196f3';
       else if (rarity === 'epic') color = '#9c27b0';
       else if (rarity === 'legendary') color = '#ff9800';
+      else if (rarity === 'mythical') color = '#ff0000';
       
       alertBox.innerHTML = `
           <h3 style="color: ${color}; margin-top: 0; font-size: 1.5em;">You found:</h3>
@@ -778,7 +843,8 @@
               ${rarity === 'common' ? '' : 
                rarity === 'uncommon' ? '★' : 
                rarity === 'rare' ? '★★' : 
-               rarity === 'epic' ? '★★★' : '★★★★★'}
+               rarity === 'epic' ? '★★★' : 
+               rarity === 'legendary' ? '★★★★' : '★★★★★'}
           </p>
           <button style="
               margin-top: 15px;
@@ -856,12 +922,14 @@
   window.addEventListener('DOMContentLoaded', () => {
     calors = parseInt(localStorage.getItem('calors')) || 0;
     inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    recentPulls = JSON.parse(localStorage.getItem('recentPulls')) || [];
     level = Math.min(parseInt(localStorage.getItem('level')) || 1, 5);
     calorPerClick = parseInt(localStorage.getItem('calorPerClick')) || 1;
     levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
     
     updateCalorDisplay();
     updateInventoryDisplay();
+    updateRecentPullsDisplay();
     updateLevelDisplay();
     loadPositions();
   });
