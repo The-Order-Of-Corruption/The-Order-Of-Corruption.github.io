@@ -702,21 +702,24 @@
   let levelUpCost = parseInt(localStorage.getItem('levelUpCost')) || 10;
   
   function updateRecentPullsDisplay() {
-    const display = document.getElementById('recent-pulls-display');
-    display.innerHTML = '';
-    
-    if (recentPulls.length === 0) {
-      display.innerHTML = '<p>No recent pulls yet.</p>';
-      return;
-    }
-    
-    recentPulls.slice(0, 5).forEach(pull => {
-      const card = document.createElement('div');
-      card.className = `item-card ${pull.rarity}`;
-      card.textContent = `${pull.name} (${pull.rarity.toUpperCase()})`;
-      display.appendChild(card);
-    });
+  const display = document.getElementById('recent-pulls-display');
+  display.innerHTML = '';
+  
+  // Always show up to 5 most recent pulls
+  const pullsToShow = recentPulls.slice(0, 5);
+  
+  if (pullsToShow.length === 0) {
+    display.innerHTML = '<p>No recent pulls yet.</p>';
+    return;
   }
+  
+  pullsToShow.forEach(pull => {
+    const card = document.createElement('div');
+    card.className = `item-card ${pull.rarity}`;
+    card.textContent = `${pull.name} (${pull.rarity.toUpperCase()})`;
+    display.appendChild(card);
+  });
+}
 
   function updateInventoryDisplay() {
     const display = document.getElementById('item-display');
@@ -772,36 +775,42 @@
   });
 
   document.getElementById('buy-pack').addEventListener('click', function() {
-    if (calors >= 150) {
-      calors -= 150;
-      
-      const roll = Math.random() * 100;
-      let rarity, item;
-      
-      if (roll < 60) {
-        rarity = 'common';
-      } else if (roll < 90) {
-        rarity = 'uncommon';
-      } else if (roll < 97) {
-        rarity = 'rare';
-      } else if (roll < 99.5) {
-        rarity = 'epic';
-      } else if (roll < 99.9) {
-        rarity = 'legendary';
-      } else {
-        rarity = 'mythical';
-      }
-      
-      item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
-      inventory.push({ name: item, rarity: rarity });
-      recentPulls.unshift({ name: item, rarity: rarity });
-      if (recentPulls.length > 5) recentPulls.pop();
-      
-      localStorage.setItem('inventory', JSON.stringify(inventory));
-      localStorage.setItem('recentPulls', JSON.stringify(recentPulls));
-      updateCalorDisplay();
-      updateInventoryDisplay();
-      updateRecentPullsDisplay();
+  if (calors >= 150) {
+    calors -= 150;
+    
+    const roll = Math.random() * 100;
+    let rarity, item;
+    
+    if (roll < 60) {
+      rarity = 'common';
+    } else if (roll < 90) {
+      rarity = 'uncommon';
+    } else if (roll < 97) {
+      rarity = 'rare';
+    } else if (roll < 99.5) {
+      rarity = 'epic';
+    } else if (roll < 99.9) {
+      rarity = 'legendary';
+    } else {
+      rarity = 'mythical';
+    }
+    
+    item = itemsDB[rarity][Math.floor(Math.random() * itemsDB[rarity].length)];
+    inventory.push({ name: item, rarity: rarity });
+    
+    // Add new pull to beginning of array
+    recentPulls.unshift({ name: item, rarity: rarity });
+    
+    // Keep only the 5 most recent pulls
+    if (recentPulls.length > 5) {
+      recentPulls = recentPulls.slice(0, 5);
+    }
+    
+    localStorage.setItem('inventory', JSON.stringify(inventory));
+    localStorage.setItem('recentPulls', JSON.stringify(recentPulls));
+    updateCalorDisplay();
+    updateInventoryDisplay();
+    updateRecentPullsDisplay(); // Make sure this is called
       
       // Create alert overlay
       const overlay = document.createElement('div');
@@ -919,7 +928,7 @@
 
   document.getElementById('level-up').addEventListener('click', levelUp);
 
-  window.addEventListener('DOMContentLoaded', () => {
+ window.addEventListener('DOMContentLoaded', () => {
     calors = parseInt(localStorage.getItem('calors')) || 0;
     inventory = JSON.parse(localStorage.getItem('inventory')) || [];
     recentPulls = JSON.parse(localStorage.getItem('recentPulls')) || [];
@@ -929,10 +938,10 @@
     
     updateCalorDisplay();
     updateInventoryDisplay();
-    updateRecentPullsDisplay();
+    updateRecentPullsDisplay(); 
     updateLevelDisplay();
     loadPositions();
-  });
+});
 </script>
 </body>
 </html>
