@@ -10,50 +10,62 @@
     :root { --gold: #ffd700; --hp: #ff4d4d; --glow: #4da6ff; --bg: #0a0a0a; --panel: #1a1a1a; }
     body { margin: 0; font-family: 'Cinzel', serif; background: #000; color: #fff; overflow-x: hidden; }
     
-    header { background: #111; padding: 15px; text-align: center; border-bottom: 2px solid #333; }
-    nav { display: flex; justify-content: center; background: #0d0d0d; padding: 10px; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #333; }
-    nav button { background: none; border: 1px solid #444; color: #ccc; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-family: 'Cinzel'; transition: 0.3s; }
+    header { background: #111; padding: 20px; text-align: center; border-bottom: 2px solid #333; }
+    header h1 { margin: 0; font-size: 2.5rem; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+
+    nav { display: flex; justify-content: center; background: #0d0d0d; padding: 10px; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+    nav button { background: none; border: 1px solid #444; color: #ccc; padding: 10px 15px; cursor: pointer; border-radius: 4px; font-family: 'Cinzel'; transition: 0.3s; font-weight: bold; }
     nav button.active { background: #fff; color: #000; border-color: #fff; }
 
-    .tab-content { display: none; padding: 20px; animation: fadeIn 0.4s; }
+    .tab-content { display: none; padding: 30px; animation: fadeIn 0.4s; }
     .tab-content.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    section { max-width: 900px; margin: auto; background: var(--panel); padding: 25px; border-radius: 8px; border: 1px solid #333; }
+    section { max-width: 900px; margin: auto; background: var(--panel); padding: 30px; border-radius: 8px; border: 1px solid #333; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    h2 { border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0; }
+    p, li { line-height: 1.6; color: #ccc; }
+    a { color: #fff; font-weight: bold; }
 
-    /* RPG UI STYLES */
+    /* --- RPG UI STYLES --- */
     #game-container { font-family: 'Roboto Mono', monospace; }
     .game-header { display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 5px; border: 1px solid #444; }
-    .bar-container { background: #333; height: 12px; border-radius: 6px; margin: 4px 0; overflow: hidden; position: relative; }
+    .bar-container { background: #333; height: 12px; border-radius: 6px; margin: 4px 0; overflow: hidden; position: relative; border: 1px solid #000; }
     .bar-fill { height: 100%; transition: width 0.3s ease; }
     .hp-bar { background: var(--hp); }
     .glow-bar { background: var(--glow); }
     
     #game-screen { background: #050505; border: 2px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 15px; min-height: 250px; display: flex; flex-direction: column; }
-    #log-output { flex-grow: 1; overflow-y: auto; font-size: 0.9rem; color: #aaa; max-height: 180px; margin-bottom: 15px; padding-right: 5px; }
-    .log-entry { margin-bottom: 5px; border-left: 2px solid #444; padding-left: 8px; }
+    #log-output { flex-grow: 1; overflow-y: auto; font-size: 0.9rem; color: #aaa; height: 180px; margin-bottom: 15px; padding-right: 5px; border-bottom: 1px solid #222; }
+    .log-entry { margin-bottom: 5px; padding-left: 8px; border-left: 2px solid #333; }
     .log-important { color: var(--gold); font-weight: bold; }
     .log-enemy { color: var(--hp); }
 
-    .enemy-panel { background: #222; border: 1px solid #444; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center; }
+    .enemy-panel { background: #222; border: 1px solid #444; padding: 12px; margin-bottom: 15px; border-radius: 4px; text-align: center; }
     
     #game-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-action { background: #2a2a2a; color: white; border: 1px solid #555; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Cinzel'; }
+    .btn-action { background: #2a2a2a; color: white; border: 1px solid #555; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Cinzel'; font-weight: bold; transition: 0.2s; }
     .btn-action:hover { background: #444; border-color: #eee; }
-    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    /* STATS & EQ MENU */
-    .menu-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid var(--gold); padding: 20px; z-index: 2000; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; border-radius: 10px; display: none; }
-    .eq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .eq-slot { background: #111; padding: 8px; border: 1px solid #444; border-radius: 4px; font-size: 0.8rem; }
-    .stat-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #333; }
-    .point-btn { background: var(--gold); color: black; border: none; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    /* --- MENUS --- */
+    .menu-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid var(--gold); padding: 25px; z-index: 2000; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; border-radius: 10px; display: none; box-shadow: 0 0 50px rgba(0,0,0,0.9); }
+    .eq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .eq-slot { background: #111; padding: 10px; border: 1px solid #444; border-radius: 4px; font-size: 0.75rem; color: #888; }
+    .eq-slot strong { color: #fff; display: block; margin-bottom: 3px; }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333; }
+    .point-btn { background: var(--gold); color: black; border: none; width: 28px; height: 28px; border-radius: 4px; cursor: pointer; font-weight: bold; }
 
-    /* Tier List - Original Styles preserved */
-    .tier { display: flex; align-items: center; margin-bottom: 10px; border: 1px solid #444; }
-    .tier-label { width: 50px; text-align: center; font-weight: bold; font-size: 1.5rem; }
-    .drop-zone { flex-grow: 1; min-height: 80px; display: flex; flex-wrap: wrap; background: #222; padding: 5px; }
-    .item { width: 70px; height: 70px; background: #fff; color: #000; margin: 5px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; text-align: center; cursor: grab; }
+    /* --- TIER LIST --- */
+    .tier { display: flex; align-items: center; margin-bottom: 10px; border: 1px solid #444; border-radius: 5px; overflow: hidden; }
+    .tier-label { width: 60px; height: 80px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.8rem; background: #333; }
+    .drop-zone { flex-grow: 1; min-height: 80px; display: flex; flex-wrap: wrap; background: #1a1a1a; padding: 5px; gap: 5px; }
+    .item { width: 70px; height: 70px; background: #fff; color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; text-align: center; cursor: grab; border-radius: 4px; user-select: none; }
+
+    @media (max-width: 600px) {
+      nav button { padding: 8px 10px; font-size: 0.8rem; }
+      .item { width: 60px; height: 60px; }
+      #game-controls { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -62,46 +74,70 @@
 
   <nav>
     <button class="nav-link active" onclick="showTab('home')">Home</button>
+    <button class="nav-link" onclick="showTab('chapters')">The Story</button>
+    <button class="nav-link" onclick="showTab('the-world')">The World</button>
     <button class="nav-link" onclick="showTab('tierlist')">Tier List</button>
-    <button class="nav-link" onclick="showTab('game')">Play Game</button>
+    <button class="nav-link" onclick="showTab('game')">The Game</button>
+    <button class="nav-link" onclick="showTab('updates')">Updates</button>
   </nav>
 
   <div id="home" class="tab-content active">
     <section>
-      <h2>Welcome to Trikion</h2>
-      <p>A fantasy story of Corruption, Pride, and Greed. Follow Corin's journey through the nations of Karlam and beyond.</p>
+      <h2>Welcome to the Order</h2>
+      <p>Set in a world where <strong>Corruption, Pride, and Greed</strong> manifest as physical power. This story follows <strong>Corin</strong>, a young boy who lost everything and joined a crew of bandits led by an ex-Karlam Military Captain.</p>
+      <p><em>Warning: Themes of self-harm, death, and discrimination. Intended for teenagers and up.</em></p>
+      <p><strong>Author:</strong> Piotr A</p>
+    </section>
+  </div>
+
+  <div id="chapters" class="tab-content">
+    <section>
+      <h2>Read the Story</h2>
+      <p>The saga currently spans <strong>Chapters 1 – 239</strong>. You can follow the full journey online via Reedsy:</p>
+      <p><a href="https://editor.reedsy.com/s/lz7m4EY" target="_blank">Read The Order of Corruption on Reedsy</a></p>
+    </section>
+  </div>
+
+  <div id="the-world" class="tab-content">
+    <section>
+      <h2>Lore & Knowledge</h2>
+      <p><strong>Glow:</strong> The manifestation of the mind and heart. It serves as the primary power system in Trikion.</p>
+      <p><strong>Enemies:</strong> From the iron-fisted Karlam Military to cutthroat criminals in the wastes.</p>
+      <p><strong>Geography:</strong> The continent of Trikion is divided into four major nations: <strong>Karlam, Shenghua, Frenkon, and Icium</strong>.</p>
     </section>
   </div>
 
   <div id="tierlist" class="tab-content">
     <section>
-      <h2>Character Tiers</h2>
-      <div class="tier" style="border-left: 10px solid #ff7f7f;"><div class="tier-label">S</div><div class="drop-zone" data-tier="S"></div></div>
-      <div class="tier" style="border-left: 10px solid #ffbf7f;"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
-      <div class="tier" style="border-left: 10px solid #ffff7f;"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
-      <div class="tier" style="border-left: 10px solid #7fff7f;"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
+      <h2>Character Ranking</h2>
+      <div class="tier" style="border-left: 10px solid #ff4d4d;"><div class="tier-label">S</div><div class="drop-zone" data-tier="S"></div></div>
+      <div class="tier" style="border-left: 10px solid #ffa500;"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
+      <div class="tier" style="border-left: 10px solid #ffff00;"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
+      <div class="tier" style="border-left: 10px solid #00ff00;"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
       
-      <div id="item-pool" class="drop-zone" style="margin-top:20px; border:1px dashed #555;">
+      <div id="item-pool" class="drop-zone" style="margin-top:20px; border:1px dashed #555; min-height: 100px;">
         <div class="item" draggable="true">Corin</div><div class="item" draggable="true">Han</div>
         <div class="item" draggable="true">Oswald</div><div class="item" draggable="true">Chiz</div>
         <div class="item" draggable="true">York</div><div class="item" draggable="true">Gorm</div>
+        <div class="item" draggable="true">Mikael</div><div class="item" draggable="true">Kaito</div>
       </div>
+      <button onclick="resetTiers()" style="margin-top:15px; padding:10px; background:#444; border:none; color:white; cursor:pointer;">Reset Items</button>
     </section>
   </div>
 
   <div id="game" class="tab-content">
     <section id="game-container">
       <div id="setup-screen">
-        <h2>Enter the World</h2>
-        <input type="text" id="p-name" placeholder="Name..." style="padding:10px; width:100%; box-sizing:border-box; margin-bottom:10px;">
-        <button class="btn-action" style="width:100%" onclick="initGame()">Start Adventure</button>
+        <h2>Character Creation</h2>
+        <input type="text" id="p-name" placeholder="Enter Name..." style="padding:12px; width:100%; box-sizing:border-box; margin-bottom:15px; background:#111; color:#fff; border:1px solid #444;">
+        <button class="btn-action" style="width:100%" onclick="initGame()">Start Journey</button>
       </div>
 
       <div id="game-ui" style="display:none">
         <div class="game-header">
           <div>
             <div id="ui-name" style="font-weight:bold; color:var(--gold)">Player</div>
-            <div style="font-size:0.8rem">LVL <span id="ui-lvl">1</span> | <span id="ui-region">Mulner</span></div>
+            <div style="font-size:0.75rem">LVL <span id="ui-lvl">1</span> | <span id="ui-region">Mulner</span></div>
           </div>
           <div>
             <div class="bar-container"><div id="hp-fill" class="bar-fill hp-bar" style="width:100%"></div></div>
@@ -110,9 +146,9 @@
         </div>
 
         <div id="enemy-ui" class="enemy-panel" style="display:none">
-          <div id="enemy-name" style="color:var(--hp); font-weight:bold">Enemy</div>
-          <div class="bar-container" style="height:8px;"><div id="enemy-hp-fill" class="bar-fill hp-bar" style="width:100%"></div></div>
-          <div id="enemy-hp-text" style="font-size:0.7rem">100 / 100 HP</div>
+          <div id="enemy-name" style="color:var(--hp); font-weight:bold; margin-bottom:5px;">Enemy</div>
+          <div class="bar-container" style="height:10px;"><div id="enemy-hp-fill" class="bar-fill hp-bar" style="width:100%"></div></div>
+          <div id="enemy-hp-text" style="font-size:0.7rem; margin-top:3px;">100 / 100 HP</div>
         </div>
 
         <div id="game-screen">
@@ -121,62 +157,78 @@
         </div>
 
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:5px;">
-          <button class="btn-action" style="padding:5px; font-size:0.7rem" onclick="toggleMenu('stats-menu')">STATS</button>
-          <button class="btn-action" style="padding:5px; font-size:0.7rem" onclick="toggleMenu('eq-menu')">EQUIP</button>
-          <button class="btn-action" style="padding:5px; font-size:0.7rem" onclick="toggleMenu('skill-menu')">SKILLS</button>
+          <button class="btn-action" style="padding:8px; font-size:0.7rem" onclick="toggleMenu('stats-menu')">STATS</button>
+          <button class="btn-action" style="padding:8px; font-size:0.7rem" onclick="toggleMenu('eq-menu')">EQUIP</button>
+          <button class="btn-action" style="padding:8px; font-size:0.7rem" onclick="toggleMenu('skill-menu')">SKILLS</button>
         </div>
       </div>
     </section>
   </div>
 
+  <div id="updates" class="tab-content">
+    <section>
+      <h2>Update Log</h2>
+      <p><strong>04/06/2026:</strong> Mega Update! Added RPG Game Arc 1, Stat Systems, Equipment Slots, and Gorm Boss Fight.</p>
+      <p><strong>07/07/2025:</strong> System maintenance and tier list updates.</p>
+    </section>
+  </div>
+
   <div id="stats-menu" class="menu-overlay">
-    <h3>Character Stats</h3>
-    <p>Points Available: <span id="stat-points">0</span></p>
+    <h3>Stats & Points</h3>
+    <p>Available Points: <span id="stat-points" style="color:var(--gold)">0</span></p>
     <div class="stat-row">Strength <span id="s-str">0</span> <button class="point-btn" onclick="addStat('str')">+</button></div>
     <div class="stat-row">Speed <span id="s-spd">0</span> <button class="point-btn" onclick="addStat('spd')">+</button></div>
     <div class="stat-row">Defense <span id="s-def">0</span> <button class="point-btn" onclick="addStat('def')">+</button></div>
     <div class="stat-row">Glow <span id="s-glow">0</span> <button class="point-btn" onclick="addStat('glow')">+</button></div>
-    <button class="btn-action" style="width:100%; margin-top:15px" onclick="toggleMenu('stats-menu')">Close</button>
+    <button class="btn-action" style="width:100%; margin-top:20px" onclick="toggleMenu('stats-menu')">Back</button>
   </div>
 
   <div id="eq-menu" class="menu-overlay">
     <h3>Equipment</h3>
     <div class="eq-grid">
-      <div class="eq-slot">Helmet: <br><span id="eq-helmet">None</span></div>
-      <div class="eq-slot">Chest: <br><span id="eq-chest">None</span></div>
-      <div class="eq-slot">Pants: <br><span id="eq-pants">None</span></div>
-      <div class="eq-slot">Boots: <br><span id="eq-boots">None</span></div>
-      <div class="eq-slot">Weapon: <br><span id="eq-weapon">Iron Dagger</span></div>
-      <div class="eq-slot">Accessory: <br><span id="eq-acc">None</span></div>
+      <div class="eq-slot"><strong>Helmet</strong><span id="eq-helmet">None</span></div>
+      <div class="eq-slot"><strong>Chest</strong><span id="eq-chest">None</span></div>
+      <div class="eq-slot"><strong>Pants</strong><span id="eq-pants">None</span></div>
+      <div class="eq-slot"><strong>Boots</strong><span id="eq-boots">None</span></div>
+      <div class="eq-slot"><strong>Weapon</strong><span id="eq-weapon">Iron Dagger</span></div>
+      <div class="eq-slot"><strong>Accessory</strong><span id="eq-acc">None</span></div>
     </div>
-    <p style="font-size:0.8rem; color:var(--gold)">Gold: <span id="ui-gold">50</span> | Leather: <span id="ui-leather">0</span></p>
-    <button class="btn-action" style="width:100%; margin-top:15px" onclick="toggleMenu('eq-menu')">Close</button>
+    <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
+      <span style="color:var(--gold)">Gold: <span id="ui-gold">0</span></span> | 
+      <span style="color:#aaa">Leather: <span id="ui-leather">0</span></span>
+    </div>
+    <button class="btn-action" style="width:100%; margin-top:20px" onclick="toggleMenu('eq-menu')">Back</button>
   </div>
 
   <div id="skill-menu" class="menu-overlay">
-    <h3>Skill Slots</h3>
-    <div id="skill-list" style="font-size:0.8rem">
-      1. <span id="sk-1">Focus (Unlocked)</span><br>
-      2. Locked<br>3. Locked<br>4. Locked<br>5. Locked<br>6. Locked
+    <h3>Combat Skills</h3>
+    <div id="skill-list" style="line-height:2">
+      1. <span id="sk-1" style="color:var(--glow)">Focus (Equipped)</span><br>
+      2. <span style="color:#555">Locked (Requires Arc 2)</span><br>
+      3. <span style="color:#555">Locked</span><br>
+      4. <span style="color:#555">Locked</span><br>
+      5. <span style="color:#555">Locked</span><br>
+      6. <span style="color:#555">Locked</span>
     </div>
-    <button class="btn-action" style="width:100%; margin-top:15px" onclick="toggleMenu('skill-menu')">Close</button>
+    <button class="btn-action" style="width:100%; margin-top:20px" onclick="toggleMenu('skill-menu')">Back</button>
   </div>
 
   <script>
-    // --- BASIC SYSTEM ---
+    // --- GLOBAL TABS ---
     function showTab(id) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      event.currentTarget.classList.add('active');
+      const activeBtn = Array.from(document.querySelectorAll('.nav-link')).find(btn => btn.innerText.toLowerCase().includes(id.replace('the-','')));
+      if(activeBtn) activeBtn.classList.add('active');
     }
 
-    // --- GAME DATA ---
+    // --- RPG LOGIC ---
     let p = {
       name: "Player", lvl: 1, xp: 0, gold: 50, leather: 0,
       hp: 100, maxHp: 100, glow: 20, maxGlow: 20,
       points: 0, str: 5, spd: 5, def: 5, glowStat: 5,
-      region: "Mulner (Lv 1-6)",
+      region: "Mulner Woods (Lv 1-6)",
       skills: ["Focus"],
       activeBuffs: [],
       eq: { helmet: "None", chest: "None", pants: "None", boots: "None", weapon: "Iron Dagger", acc: "None" }
@@ -184,36 +236,27 @@
 
     let combat = { active: false, enemy: null, turn: "player", state: "normal" };
 
-    const regions = {
-      mulner: { name: "Mulner Woods", lv: "1-6", enemies: [
-        { n: "Wolf", hp: 40, atk: 8, spd: 4, gold: 5, l: 1, xp: 20 },
-        { n: "Alpha Wolf", hp: 80, atk: 15, spd: 7, gold: 12, l: 3, xp: 50 },
-        { n: "Alpha Boar", hp: 150, atk: 25, spd: 3, gold: 30, l: 6, xp: 120 }
-      ]},
-      berezino: { name: "Berezino", lv: "6-14", enemies: [
-        { n: "Weak Bandit", hp: 250, atk: 40, spd: 12, gold: 60, l: 0, xp: 300 },
-        { n: "Average Bandit", hp: 450, atk: 70, spd: 15, gold: 120, l: 0, xp: 650 },
-        { n: "Weak Soldier", hp: 800, atk: 100, spd: 10, gold: 200, l: 0, xp: 1200 }
-      ]}
+    const enemies = {
+      mulner: [
+        { n: "Wolf", hp: 45, atk: 9, spd: 5, gold: 6, l: 1, xp: 25 },
+        { n: "Alpha Wolf", hp: 85, atk: 18, spd: 8, gold: 15, l: 3, xp: 60 },
+        { n: "Alpha Boar", hp: 160, atk: 28, spd: 4, gold: 35, l: 7, xp: 130 }
+      ],
+      berezino: [
+        { n: "Weak Bandit", hp: 280, atk: 45, spd: 12, gold: 70, l: 0, xp: 350 },
+        { n: "Average Bandit", hp: 500, atk: 75, spd: 16, gold: 130, l: 0, xp: 700 },
+        { n: "Weak Soldier", hp: 850, atk: 110, spd: 11, gold: 220, l: 0, xp: 1300 }
+      ]
     };
 
     function initGame() {
-      const nameIn = document.getElementById('p-name').value;
-      if(nameIn) p.name = nameIn;
+      const name = document.getElementById('p-name').value;
+      if(name) p.name = name;
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('game-ui').style.display = 'block';
       updateUI();
-      gameLog("You arrive at Mulner Woods. A local trainer waves you over.");
+      gameLog("You arrive at Mulner Woods. The journey begins.");
       mainMenu();
-    }
-
-    function gameLog(msg, type='') {
-      const log = document.getElementById('log-output');
-      const div = document.createElement('div');
-      div.className = `log-entry ${type}`;
-      div.innerHTML = `> ${msg}`;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
     }
 
     function updateUI() {
@@ -232,8 +275,17 @@
       
       if(p.xp >= p.lvl * 100) {
         p.xp = 0; p.lvl++; p.points += 5;
-        gameLog(`LEVEL UP! You are now level ${p.lvl}. You gained 5 Stat Points.`, 'log-important');
+        gameLog(`LEVEL UP! You are now level ${p.lvl}. Gained 5 points.`, 'log-important');
       }
+    }
+
+    function gameLog(msg, type='') {
+      const log = document.getElementById('log-output');
+      const div = document.createElement('div');
+      div.className = `log-entry ${type}`;
+      div.innerHTML = `> ${msg}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
     }
 
     function toggleMenu(id) {
@@ -249,90 +301,63 @@
       }
     }
 
-    // --- BUTTON SYSTEM ---
     function clearBtns() { document.getElementById('game-controls').innerHTML = ""; }
-    function addBtn(txt, func, dis=false) {
+    function addBtn(txt, func) {
       const b = document.createElement('button');
       b.className = "btn-action";
       b.textContent = txt;
       b.onclick = func;
-      b.disabled = dis;
       document.getElementById('game-controls').appendChild(b);
     }
 
-    // --- LOCATIONS ---
     function mainMenu() {
       clearBtns();
-      p.hp = p.maxHp; p.glow = p.maxGlow; // Fully heal in town
+      p.hp = p.maxHp; p.glow = p.maxGlow;
       updateUI();
-      addBtn("Explore Woods", exploreMulner);
-      addBtn("Talk to Trainer", talkTrainer);
-      addBtn("Visit Tavern", visitTavern);
-      addBtn("Blacksmith", visitSmith);
-    }
-
-    function exploreMulner() {
-      clearBtns();
-      gameLog("You wander into the tall grass...");
-      const roll = Math.random();
-      let enemy;
-      if(roll < 0.6) enemy = {...regions.mulner.enemies[0]};
-      else if(roll < 0.9) enemy = {...regions.mulner.enemies[1]};
-      else enemy = {...regions.mulner.enemies[2]};
-      startCombat(enemy);
-    }
-
-    function talkTrainer() {
-      gameLog("Trainer: 'Focus your mind. It costs Glow, but your next strike will be true.'");
-      gameLog("SYSTEM: You learned the skill [FOCUS].", "log-important");
-      mainMenu();
-    }
-
-    function visitTavern() {
-      clearBtns();
-      gameLog("A young man in soldier's garb sits at the counter, smirking.");
-      addBtn("Talk to Gorm", () => {
-        gameLog("Gorm: 'Looking for Berezino? You don't look like you could handle a fly, let alone the bandits there.'");
-        if(p.lvl >= 6) addBtn("Challenge Gorm", bossGorm);
-        else gameLog("Gorm: 'Come back when you're at least Level 6, brat.'");
+      addBtn("Explore Woods", exploreRegion);
+      addBtn("Talk to Trainer", () => {
+        gameLog("Trainer: 'Focus is key. Next strike will deal +50% damage.'");
+        gameLog("Learned Skill: FOCUS", "log-important");
       });
-      addBtn("Leave", mainMenu);
-    }
-
-    function bossGorm() {
-      const gorm = { n: "Gorm (Boss)", hp: 400, atk: 45, spd: 12, gold: 500, l: 0, xp: 1000, boss: true };
-      startCombat(gorm);
-    }
-
-    function visitSmith() {
-      clearBtns();
-      gameLog("Smith: 'Bring me leather and gold for protection.'");
-      addBtn("Leather Chest (15L, 50g)", () => buyEq('chest', 'Leather Vest', 0, 10, 50, 15));
-      addBtn("Leather Boots (5L, 20g)", () => buyEq('boots', 'Leather Boots', 0, 3, 20, 5));
-      addBtn("Iron Sword (200g)", () => buyEq('weapon', 'Iron Sword', 20, 0, 200, 0));
-      addBtn("Back", mainMenu);
+      addBtn("Visit Tavern", () => {
+        clearBtns();
+        gameLog("You see Gorm smirking at the bar.");
+        addBtn("Challenge Gorm", () => {
+          if(p.lvl < 6) gameLog("Gorm: 'Beat it, Lv 6 only!'");
+          else startCombat({ n: "Gorm (Boss)", hp: 450, atk: 50, spd: 13, gold: 500, l: 0, xp: 1000, boss: true });
+        });
+        addBtn("Leave", mainMenu);
+      });
+      addBtn("Blacksmith", () => {
+        clearBtns();
+        addBtn("Iron Sword (200g)", () => buyEq('weapon', 'Iron Sword', 20, 0, 200, 0));
+        addBtn("Leather Vest (15L, 50g)", () => buyEq('chest', 'Leather Vest', 0, 12, 50, 15));
+        addBtn("Back", mainMenu);
+      });
     }
 
     function buyEq(slot, name, atk, def, gold, leather) {
       if(p.gold >= gold && p.leather >= leather) {
         p.gold -= gold; p.leather -= leather;
-        p.eq[slot] = name;
-        p.str += atk; p.def += def;
-        gameLog(`Equipped ${name}!`);
-        updateUI();
+        p.eq[slot] = name; p.str += atk; p.def += def;
+        gameLog(`Equipped ${name}!`); updateUI();
         document.getElementById(`eq-${slot}`).textContent = name;
-      } else gameLog("Insufficient resources!");
+      } else gameLog("Missing materials!");
     }
 
-    // --- COMBAT SYSTEM ---
+    function exploreRegion() {
+      const table = p.lvl >= 6 && p.region.includes("Berezino") ? enemies.berezino : enemies.mulner;
+      const roll = Math.random();
+      let e = roll < 0.6 ? table[0] : (roll < 0.9 ? table[1] : table[2]);
+      startCombat({...e});
+    }
+
     function startCombat(enemy) {
-      combat.active = true;
-      combat.enemy = enemy;
-      combat.enemyMaxHp = enemy.hp;
+      combat.active = true; combat.enemy = enemy; combat.enemyMaxHp = enemy.hp;
       document.getElementById('enemy-ui').style.display = 'block';
       document.getElementById('enemy-name').textContent = enemy.n;
       updateEnemyUI();
-      combatTurn();
+      combatLoop();
     }
 
     function updateEnemyUI() {
@@ -341,115 +366,77 @@
       document.getElementById('enemy-hp-text').textContent = `${Math.ceil(combat.enemy.hp)} / ${combat.enemyMaxHp} HP`;
     }
 
-    function combatTurn() {
+    function combatLoop() {
       clearBtns();
       if(combat.turn === "player") {
         addBtn("Attack", () => resolveTurn("atk"));
-        addBtn("Dodge", () => resolveTurn("dodge"));
         addBtn("Block", () => resolveTurn("block"));
+        addBtn("Dodge", () => resolveTurn("dodge"));
         if(p.skills.includes("Focus")) addBtn("Focus (5 Glow)", () => resolveTurn("focus"));
       } else {
-        setTimeout(enemyAction, 1000);
+        setTimeout(enemyAction, 800);
       }
     }
 
     function resolveTurn(act) {
       if(act === "atk") {
-        let dmg = p.str + (Math.random() * 5);
-        if(p.activeBuffs.includes("focused")) {
-          dmg *= 1.5;
-          p.activeBuffs = p.activeBuffs.filter(b => b !== "focused");
-          gameLog("The focused strike connects!");
-        }
+        let dmg = p.str + Math.floor(Math.random() * 5);
+        if(p.activeBuffs.includes("focused")) { dmg *= 1.5; p.activeBuffs = []; gameLog("FOCUSED STRIKE!"); }
         combat.enemy.hp -= dmg;
-        gameLog(`You hit ${combat.enemy.n} for ${Math.floor(dmg)} damage.`);
-      } 
-      else if(act === "focus") {
-        if(p.glow >= 5) {
-          p.glow -= 5; p.activeBuffs.push("focused");
-          gameLog("You focus your Glow into your next strike.");
-          updateUI(); combatTurn(); return;
-        } else { gameLog("Not enough Glow!"); return; }
-      }
-      else if(act === "dodge") {
-        combat.state = "dodging";
-        gameLog("You prepare to weave through the next attack.");
-      }
-      else if(act === "block") {
-        combat.state = "blocking";
-        gameLog("You raise your guard.");
-      }
+        gameLog(`Dealt ${Math.floor(dmg)} to ${combat.enemy.n}.`);
+      } else if(act === "focus") {
+        if(p.glow >= 5) { p.glow -= 5; p.activeBuffs.push("focused"); gameLog("Concentrating..."); updateUI(); combatLoop(); return; }
+        else gameLog("No Glow!"); return;
+      } else if(act === "dodge") { combat.state = "dodging"; gameLog("Preparing to dodge..."); }
+      else if(act === "block") { combat.state = "blocking"; gameLog("Guard raised."); }
 
-      if(combat.enemy.hp <= 0) return winCombat();
-      combat.turn = "enemy";
-      combatTurn();
+      if(combat.enemy.hp <= 0) return win();
+      combat.turn = "enemy"; combatLoop();
     }
 
     function enemyAction() {
       let dmg = combat.enemy.atk;
-      let chance = Math.random();
-
       if(combat.state === "dodging") {
-        if(chance > 0.3) { gameLog(`You dodged the ${combat.enemy.n}'s attack!`); dmg = 0; }
-        else gameLog("You failed to dodge!");
-      } 
-      else if(combat.state === "blocking") {
-        dmg = Math.max(1, dmg - (p.def * 1.5));
-        gameLog("You blocked most of the damage.");
-      } else {
-        dmg = Math.max(1, dmg - p.def);
-      }
+        if(Math.random() > 0.3) { gameLog("Dodged!"); dmg = 0; }
+        else gameLog("Dodge failed!");
+      } else if(combat.state === "blocking") {
+        dmg = Math.max(1, dmg - (p.def * 1.6)); gameLog("Blocked!");
+      } else { dmg = Math.max(1, dmg - p.def); }
 
       p.hp -= dmg;
-      if(dmg > 0) gameLog(`${combat.enemy.n} hit you for ${Math.floor(dmg)} damage.`, "log-enemy");
-      combat.state = "normal";
-      updateUI();
+      if(dmg > 0) gameLog(`${combat.enemy.n} dealt ${Math.floor(dmg)} damage.`, "log-enemy");
+      combat.state = "normal"; updateUI();
       
-      if(p.hp <= 0) {
-        gameLog("You have been defeated...");
-        setTimeout(() => location.reload(), 3000);
-      } else {
-        combat.turn = "player";
-        combatTurn();
-      }
+      if(p.hp <= 0) { gameLog("KO!"); setTimeout(() => location.reload(), 2000); }
+      else { combat.turn = "player"; combatLoop(); }
     }
 
-    function winCombat() {
-      gameLog(`Victory! Gained ${combat.enemy.gold}g, ${combat.enemy.l} leather, and ${combat.enemy.xp} XP.`, "log-important");
-      p.gold += combat.enemy.gold;
-      p.leather += combat.enemy.l;
-      p.xp += combat.enemy.xp;
-      
-      if(combat.enemy.boss) {
-        gameLog("Gorm: 'Fine! Go to Berezino then. See if I care.'");
-        p.region = "Berezino (Lv 6-14)";
-        regions.mulner.enemies = regions.berezino.enemies; // Update encounter table
-      }
-
+    function win() {
+      gameLog(`Victory! Found ${combat.enemy.gold}g and ${combat.enemy.l} leather.`, "log-important");
+      p.gold += combat.enemy.gold; p.leather += combat.enemy.l; p.xp += combat.enemy.xp;
+      if(combat.enemy.boss) { p.region = "Berezino (Lv 6-14)"; gameLog("Berezino unlocked!"); }
       document.getElementById('enemy-ui').style.display = 'none';
-      combat.active = false;
-      updateUI();
-      mainMenu();
+      combat.active = false; updateUI(); mainMenu();
     }
 
-    // --- TIER LIST LOGIC ---
+    // --- TIER LIST DRAG ---
     document.querySelectorAll('.item').forEach(it => {
       it.onpointerdown = e => {
-        it.style.position = 'fixed';
-        it.style.zIndex = 1000;
-        const move = ev => {
-          it.style.left = ev.pageX - 35 + 'px';
-          it.style.top = ev.pageY - 35 + 'px';
-        };
+        it.style.position = 'fixed'; it.style.zIndex = 1000;
+        const move = ev => { it.style.left = ev.pageX-35+'px'; it.style.top = ev.pageY-35+'px'; };
         document.onpointermove = move;
         it.onpointerup = ev => {
-          document.onpointermove = null;
-          it.style.position = '';
+          document.onpointermove = null; it.style.position = '';
           const target = document.elementFromPoint(ev.clientX, ev.clientY)?.closest('.drop-zone');
           if(target) target.appendChild(it);
         };
       };
     });
+
+    function resetTiers() {
+      const pool = document.getElementById('item-pool');
+      document.querySelectorAll('.item').forEach(i => pool.appendChild(i));
+    }
   </script>
 </body>
 </html>
