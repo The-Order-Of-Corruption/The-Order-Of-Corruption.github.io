@@ -98,8 +98,7 @@
       padding-bottom: 5px;
     }
 
-    p,
-    li {
+    p, li {
       line-height: 1.6;
       color: #ccc;
     }
@@ -166,13 +165,13 @@
       cursor: move;
       user-select: none;
       font-weight: bold;
-      touch-action: none; /* Prevents mobile scrolling while dragging */
+      touch-action: none;
       z-index: 10;
     }
 
     .item.dragging {
       opacity: 0.5;
-      pointer-events: none; /* Allows elementFromPoint to see through the item */
+      pointer-events: none;
     }
 
     .drop-zone.over {
@@ -181,16 +180,16 @@
     }
 
     #reset-tierlist {
-      padding: 15px 30px;              
-      font-size: 18px;                
-      background-color: #f44336;      
-      color: white;                    
-      border: none;                    
-      border-radius: 8px;           
-      cursor: pointer;                
-      margin-top: 20px;                
-      transition: background-color 0.3s; 
-      font-family: 'Cinzel', serif;   
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+      font-family: 'Cinzel', serif;
     }
     
     #reset-tierlist:hover {
@@ -334,7 +333,6 @@
     zone.addEventListener('drop', handleDrop);
   });
 
-  // --- Desktop Drag & Drop ---
   function handleDragStart(e) {
     this.classList.add('dragging');
   }
@@ -363,14 +361,12 @@
     }
   }
 
-  // --- Mobile Touch & Auto-Scroll Logic ---
   let touchDraggedItem = null;
   let scrollInterval = null;
 
   function handleTouchStart(e) {
     touchDraggedItem = this;
     this.classList.add('dragging');
-    // Set fixed positioning so it follows finger regardless of scroll
     this.style.position = 'fixed';
     this.style.zIndex = '1000';
     updateTouchPos(e);
@@ -381,14 +377,11 @@
     e.preventDefault();
     
     const touch = e.touches[0];
-    
-    // Move element with finger (offset by half item size)
     const offset = touchDraggedItem.offsetWidth / 2;
     touchDraggedItem.style.left = `${touch.clientX - offset}px`;
     touchDraggedItem.style.top = `${touch.clientY - offset}px`;
 
-    // --- AUTO-SCROLL LOGIC ---
-    const threshold = 100; // px from top/bottom to start scrolling
+    const threshold = 100; 
     const scrollSpeed = 15;
     
     stopAutoScroll();
@@ -399,7 +392,6 @@
       scrollInterval = setInterval(() => window.scrollBy(0, scrollSpeed), 16);
     }
 
-    // Highlighting drop zones
     const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
     const dropZone = touchElement?.closest('.drop-zone');
     
@@ -447,7 +439,6 @@
     touchDraggedItem.style.top = `${touch.clientY - offset}px`;
   }
 
-  // --- Persistence Logic ---
   function savePositions() {
     const positions = {};
     dropZones.forEach(zone => {
