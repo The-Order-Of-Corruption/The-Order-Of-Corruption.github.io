@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="The Order of Corruption is a fantasy story featuring Glow powers, corruption, and epic character battles.">
   <meta name="keywords" content="fantasy story, Glow powers, corruption, The Order of Corruption, magic world">
   <meta name="author" content="Your Name">
@@ -15,6 +16,7 @@
       font-family: 'Cinzel', serif;
       background: #000000;
       color: #ffffff;
+      overflow-x: hidden;
     }
 
     header {
@@ -116,6 +118,12 @@
         flex-direction: column;
         align-items: center;
       }
+      .item {
+        width: 80px !important;
+        height: 80px !important;
+        line-height: 80px !important;
+        font-size: 12px;
+      }
     }
 
     .tier {
@@ -158,27 +166,31 @@
       cursor: move;
       user-select: none;
       font-weight: bold;
+      touch-action: none; /* Prevents mobile scrolling while dragging */
+      z-index: 10;
     }
 
     .item.dragging {
       opacity: 0.5;
+      pointer-events: none; /* Allows elementFromPoint to see through the item */
     }
 
     .drop-zone.over {
       border: 2px dashed #aaa;
+      background-color: #444;
     }
 
     #reset-tierlist {
-    padding: 15px 30px;             
-    font-size: 18px;                
-    background-color: #f44336;      
-    color: white;                   
-    border: none;                   
-    border-radius: 8px;           
-    cursor: pointer;               
-    margin-top: 20px;               
-    transition: background-color 0.3s; 
-    font-family: 'Cinzel', serif;   
+      padding: 15px 30px;              
+      font-size: 18px;                
+      background-color: #f44336;      
+      color: white;                    
+      border: none;                    
+      border-radius: 8px;           
+      cursor: pointer;                
+      margin-top: 20px;                
+      transition: background-color 0.3s; 
+      font-family: 'Cinzel', serif;   
     }
     
     #reset-tierlist:hover {
@@ -205,6 +217,7 @@
       <h2>Update log</h2>
       <p>03/05/25: Made the clicker game.</p>
       <p>07/07/25: Removed the clicker game.</p>
+      <p>04/06/26: Added auto-scroll logic for mobile tier list.</p>
     </section>
   </div>
 
@@ -275,7 +288,7 @@
           <div class="item" draggable="true">Matheus</div>
           <div class="item" draggable="true">Karasu</div>
           <div class="item" draggable="true">Kuma</div>
-    	    <div class="item" draggable="true">Chita</div>
+          <div class="item" draggable="true">Chita</div>
           <div class="item" draggable="true">Severyn</div>
           <div class="item" draggable="true">Thunder</div>
           <div class="item" draggable="true">Cloud</div>
@@ -290,7 +303,7 @@
   </div>
 
   <script>
-  // Tab switching functionality
+  // --- Tab switching functionality ---
   const tabs = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
 
@@ -303,7 +316,7 @@
     });
   });
 
-  // Tier List Drag and Drop Functionality
+  // --- Tier List Setup ---
   const tierItems = document.querySelectorAll('#tierlist .item');
   const dropZones = document.querySelectorAll('.drop-zone');
 
@@ -319,14 +332,9 @@
     zone.addEventListener('dragover', handleDragOver);
     zone.addEventListener('dragleave', handleDragLeave);
     zone.addEventListener('drop', handleDrop);
-    zone.addEventListener('touchmove', handleTouchMove, {passive: false});
-    zone.addEventListener('touchend', handleTouchEnd, {passive: false});
   });
 
-  let touchDraggedItem = null;
-  let touchStartX = 0;
-  let touchStartY = 0;
-
+  // --- Desktop Drag & Drop ---
   function handleDragStart(e) {
     this.classList.add('dragging');
   }
@@ -355,12 +363,17 @@
     }
   }
 
+  // --- Mobile Touch & Auto-Scroll Logic ---
+  let touchDraggedItem = null;
+  let scrollInterval = null;
+
   function handleTouchStart(e) {
-    e.preventDefault();
     touchDraggedItem = this;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
     this.classList.add('dragging');
+    // Set fixed positioning so it follows finger regardless of scroll
+    this.style.position = 'fixed';
+    this.style.zIndex = '1000';
+    updateTouchPos(e);
   }
 
   function handleTouchMove(e) {
@@ -368,16 +381,29 @@
     e.preventDefault();
     
     const touch = e.touches[0];
-    const x = touch.clientX - touchStartX;
-    const y = touch.clientY - touchStartY;
     
-    touchDraggedItem.style.transform = `translate(${x}px, ${y}px)`;
+    // Move element with finger (offset by half item size)
+    const offset = touchDraggedItem.offsetWidth / 2;
+    touchDraggedItem.style.left = `${touch.clientX - offset}px`;
+    touchDraggedItem.style.top = `${touch.clientY - offset}px`;
+
+    // --- AUTO-SCROLL LOGIC ---
+    const threshold = 100; // px from top/bottom to start scrolling
+    const scrollSpeed = 15;
     
+    stopAutoScroll();
+
+    if (touch.clientY < threshold) {
+      scrollInterval = setInterval(() => window.scrollBy(0, -scrollSpeed), 16);
+    } else if (touch.clientY > window.innerHeight - threshold) {
+      scrollInterval = setInterval(() => window.scrollBy(0, scrollSpeed), 16);
+    }
+
+    // Highlighting drop zones
     const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
-    const dropZone = touchElement.closest('.drop-zone');
+    const dropZone = touchElement?.closest('.drop-zone');
     
     dropZones.forEach(zone => zone.classList.remove('over'));
-    
     if (dropZone) {
       dropZone.classList.add('over');
     }
@@ -385,9 +411,12 @@
 
   function handleTouchEnd(e) {
     if (!touchDraggedItem) return;
-    e.preventDefault();
-    
-    touchDraggedItem.style.transform = '';
+    stopAutoScroll();
+
+    touchDraggedItem.style.position = '';
+    touchDraggedItem.style.zIndex = '';
+    touchDraggedItem.style.left = '';
+    touchDraggedItem.style.top = '';
     touchDraggedItem.classList.remove('dragging');
     
     const touch = e.changedTouches[0];
@@ -404,10 +433,26 @@
     touchDraggedItem = null;
   }
 
+  function stopAutoScroll() {
+    if (scrollInterval) {
+      clearInterval(scrollInterval);
+      scrollInterval = null;
+    }
+  }
+
+  function updateTouchPos(e) {
+    const touch = e.touches[0];
+    const offset = touchDraggedItem.offsetWidth / 2;
+    touchDraggedItem.style.left = `${touch.clientX - offset}px`;
+    touchDraggedItem.style.top = `${touch.clientY - offset}px`;
+  }
+
+  // --- Persistence Logic ---
   function savePositions() {
     const positions = {};
     dropZones.forEach(zone => {
-      positions[zone.dataset.tier] = Array.from(zone.children).map(item => item.textContent);
+      const tierName = zone.dataset.tier || 'pool';
+      positions[tierName] = Array.from(zone.children).map(item => item.textContent);
     });
     localStorage.setItem('tierListPositions', JSON.stringify(positions));
   }
@@ -417,11 +462,16 @@
     if (saved) {
       const positions = JSON.parse(saved);
       Object.keys(positions).forEach(tier => {
-        const zone = document.querySelector(`[data-tier="${tier}"]`);
-        positions[tier].forEach(charName => {
-          const item = [...document.querySelectorAll('#tierlist .item')].find(el => el.textContent === charName);
-          if (item) zone.appendChild(item);
-        });
+        const zone = tier === 'pool' 
+          ? document.getElementById('item-pool') 
+          : document.querySelector(`[data-tier="${tier}"]`);
+        
+        if (zone) {
+          positions[tier].forEach(charName => {
+            const item = [...document.querySelectorAll('#tierlist .item')].find(el => el.textContent === charName);
+            if (item) zone.appendChild(item);
+          });
+        }
       });
     }
   }
@@ -442,4 +492,3 @@
 </script>
 </body>
 </html>
-
