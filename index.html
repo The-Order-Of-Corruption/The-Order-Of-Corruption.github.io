@@ -72,14 +72,8 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     section {
@@ -92,109 +86,29 @@
       border: 1px solid #333;
     }
 
-    h2 {
-      color: #ffffff;
-      border-bottom: 1px solid #444;
-      padding-bottom: 5px;
-    }
+    h2 { color: #ffffff; border-bottom: 1px solid #444; padding-bottom: 5px; }
+    p, li { line-height: 1.6; color: #ccc; }
+    a { color: #fff; text-decoration: underline; }
 
-    p,
-    li {
-      line-height: 1.6;
-      color: #ccc;
-    }
+    /* Tier List Styles */
+    .tier { display: flex; align-items: center; margin-bottom: 15px; border: 2px solid #444; border-radius: 8px; padding: 10px; background: #2a2a2a; }
+    .tier-label { width: 60px; font-size: 20px; font-weight: bold; text-align: center; margin-right: 10px; }
+    .drop-zone { flex: 1; display: flex; flex-wrap: wrap; min-height: 60px; padding: 10px; background-color: #333; border-radius: 8px; }
+    .item { width: 100px; height: 100px; margin: 5px; background-color: white; color: black; border-radius: 6px; text-align: center; line-height: 100px; cursor: move; user-select: none; font-weight: bold; touch-action: none; z-index: 10; }
+    .item.dragging { opacity: 0.5; pointer-events: none; }
+    .drop-zone.over { border: 2px dashed #aaa; background-color: #444; }
 
-    ul {
-      padding-left: 20px;
-    }
-
-    a {
-      color: #fff;
-      text-decoration: underline;
-    }
+    /* Game Styles */
+    #game-text { min-height: 200px; max-height: 300px; background: #050505; border: 1px solid #444; padding: 15px; margin-bottom: 15px; overflow-y: auto; font-family: monospace; color: #0f0; border-radius: 4px; }
+    #game-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    #game-actions button { background: #222; color: #fff; border: 1px solid #555; padding: 12px; cursor: pointer; border-radius: 4px; font-family: 'Cinzel', serif; font-size: 0.9rem; }
+    #game-actions button:hover { background: #444; }
+    .stat-box { background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444; margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; }
 
     @media (max-width: 600px) {
-      nav {
-        flex-direction: column;
-        align-items: center;
-      }
-      .item {
-        width: 80px !important;
-        height: 80px !important;
-        line-height: 80px !important;
-        font-size: 12px;
-      }
-    }
-
-    .tier {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-      border: 2px solid #444;
-      border-radius: 8px;
-      padding: 10px;
-      background: #2a2a2a;
-    }
-
-    .tier-label {
-      width: 60px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin-right: 10px;
-    }
-
-    .drop-zone {
-      flex: 1;
-      display: flex;
-      flex-wrap: wrap;
-      min-height: 60px;
-      padding: 10px;
-      background-color: #333;
-      border-radius: 8px;
-    }
-
-    .item {
-      width: 100px;
-      height: 100px;
-      margin: 5px;
-      background-color: white;
-      color: black;
-      border-radius: 6px;
-      text-align: center;
-      line-height: 100px;
-      cursor: move;
-      user-select: none;
-      font-weight: bold;
-      touch-action: none; /* Prevents mobile scrolling while dragging */
-      z-index: 10;
-    }
-
-    .item.dragging {
-      opacity: 0.5;
-      pointer-events: none; /* Allows elementFromPoint to see through the item */
-    }
-
-    .drop-zone.over {
-      border: 2px dashed #aaa;
-      background-color: #444;
-    }
-
-    #reset-tierlist {
-      padding: 15px 30px;              
-      font-size: 18px;                
-      background-color: #f44336;      
-      color: white;                    
-      border: none;                    
-      border-radius: 8px;           
-      cursor: pointer;                
-      margin-top: 20px;                
-      transition: background-color 0.3s; 
-      font-family: 'Cinzel', serif;   
-    }
-    
-    #reset-tierlist:hover {
-      background-color: #d32f2f;
+      nav { flex-direction: column; align-items: center; }
+      .item { width: 80px !important; height: 80px !important; line-height: 80px !important; font-size: 12px; }
+      #game-actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -209,26 +123,16 @@
     <button class="tab-btn" data-tab="chapters">The Story</button>
     <button class="tab-btn" data-tab="the-world">The World</button>
     <button class="tab-btn" data-tab="tierlist">Tier List</button>
+    <button class="tab-btn" data-tab="game">The Game</button>
     <button class="tab-btn" data-tab="Updates">Updates</button>
   </nav>
-
-  <div class="tab-content" id="Updates">
-    <section>
-      <h2>Update log</h2>
-      <p>03/05/25: Made the clicker game.</p>
-      <p>07/07/25: Removed the clicker game.</p>
-      <p>04/06/26: Added auto-scroll logic for mobile tier list.</p>
-    </section>
-  </div>
 
   <div class="tab-content active" id="home">
     <section>
       <h2>Welcome to the Order</h2>
       <p>It's a story set in a fantasy world in which the main topics of the story are: <strong>Corruption, Pride, and Greed</strong>.</p>
-      <p>This story is aimed towards teenagers and up. There are themes of <strong>self-harm, death, and discrimination</strong>. If you are used to these themes and are okay with them, then this story will be fine for you. This story only contains swear words on the <em>'Medium'</em> level of Ofcom's swear words ranking.</p>
+      <p>This story is aimed towards teenagers and up. There are themes of <strong>self-harm, death, and discrimination</strong>.</p>
       <p>The story's main character is a young boy named <strong>Corin</strong>. He lost his parents at a young age and is now part of a crew of bandits led by an ex-Captain of the Karlam Military.</p>
-      <p><em>I hope you have a good time reading this story!</em></p>
-      <br>
       <p><em>Author- Piotr A</em></p>
     </section>
   </div>
@@ -236,259 +140,342 @@
   <div class="tab-content" id="chapters">
     <section>
       <h2>Read the Story</h2>
-      <p>The story is available online, covering <strong>Chapters 1 – 239</strong>. You can read it on Reedsy at the link below:</p>
+      <p>The story is available online, covering <strong>Chapters 1 – 239</strong>.</p>
       <p><a href="https://editor.reedsy.com/s/lz7m4EY" target="_blank">Read The Order of Corruption</a></p>
     </section>
   </div>
 
   <div class="tab-content" id="the-world">
     <section>
-      <h2>Main Characters</h2>
+      <h2>The World of Trikion</h2>
       <p><strong>Glow:</strong> The power system of the story. It is the manifestation of both the mind and the heart.</p>
-      <p><strong>Enemies:</strong> Throughout the story, the main characters come up against many foes, such as the Karlam Military or other criminals!</p>
-      <p><strong>Locations:</strong> The story takes place on a continent named Trikion. The main countries of Trikion are Karlam, Shenghua, Frenkon and Icium. There is a few other smaller countries and even more cities in each that the story will mention!</p>
+      <p><strong>Locations:</strong> The main countries are Karlam, Shenghua, Frenkon, and Icium.</p>
     </section>
   </div>
 
   <div class="tab-content" id="tierlist">
     <section>
       <h2>Character Tier List</h2>
-      
       <div class="tier"><div class="tier-label">S</div><div class="drop-zone" data-tier="S"></div></div>
       <div class="tier"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
       <div class="tier"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
       <div class="tier"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
       <div class="tier"><div class="tier-label">D</div><div class="drop-zone" data-tier="D"></div></div>
-      <div class="tier"><div class="tier-label">E</div><div class="drop-zone" data-tier="E"></div></div>
-      <div class="tier"><div class="tier-label">F</div><div class="drop-zone" data-tier="F"></div></div>
 
       <div style="margin-top: 30px;">
         <h3>Characters:</h3>
         <div class="drop-zone" id="item-pool">
-          <div class="item" draggable="true">Han</div>
-          <div class="item" draggable="true">Chiz</div>
-          <div class="item" draggable="true">Oswald</div>
           <div class="item" draggable="true">Corin</div>
+          <div class="item" draggable="true">Han</div>
+          <div class="item" draggable="true">Oswald</div>
+          <div class="item" draggable="true">Chiz</div>
           <div class="item" draggable="true">York</div>
-          <div class="item" draggable="true">Gronkle</div>
-          <div class="item" draggable="true">Butcher</div>
           <div class="item" draggable="true">Mikael</div>
-          <div class="item" draggable="true">Patrice</div>
-          <div class="item" draggable="true">Veroner</div>
-          <div class="item" draggable="true">Sehar</div>
-          <div class="item" draggable="true">Gorm</div>
-          <div class="item" draggable="true">Berthold</div>
-          <div class="item" draggable="true">Drapes</div>
-          <div class="item" draggable="true">Gerona</div>
           <div class="item" draggable="true">Kaito</div>
-          <div class="item" draggable="true">Victor</div>
-          <div class="item" draggable="true">Bidon</div>
-          <div class="item" draggable="true">Tory</div>
-          <div class="item" draggable="true">Beke</div>
-          <div class="item" draggable="true">Matheus</div>
-          <div class="item" draggable="true">Karasu</div>
-          <div class="item" draggable="true">Kuma</div>
-          <div class="item" draggable="true">Chita</div>
-          <div class="item" draggable="true">Severyn</div>
-          <div class="item" draggable="true">Thunder</div>
-          <div class="item" draggable="true">Cloud</div>
-          <div class="item" draggable="true">Rain</div>
         </div>
       </div>
+      <button id="reset-tierlist" style="padding:10px; background:#f44336; border:none; color:white; border-radius:5px; margin-top:20px; cursor:pointer;">Reset Tier List</button>
+    </section>
+  </div>
 
-      <div style="text-align: center; margin-top: 20px;">
-        <button id="reset-tierlist">Reset Tier List</button>
+  <div class="tab-content" id="game">
+    <section>
+      <div id="setup-screen">
+        <h2>Start Your Adventure</h2>
+        <p>Step into the world of Trikion. Create your character to begin Arc 1: Karlam.</p>
+        <input type="text" id="char-name" placeholder="Character Name..." style="padding:12px; width:80%; margin-bottom:10px; border-radius:5px; border:1px solid #444; background:#222; color:#fff;"><br>
+        <select id="char-gender" style="padding:12px; width:85%; margin-bottom:20px; border-radius:5px; border:1px solid #444; background:#222; color:#fff;">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Non-Binary</option>
+        </select><br>
+        <button id="start-game-btn" style="padding:15px 40px; background:#fff; color:#000; border:none; cursor:pointer; font-weight:bold; border-radius:5px;">Begin Journey</button>
+      </div>
+
+      <div id="main-game-screen" style="display:none;">
+        <div class="stat-box">
+          <div>Name: <span id="display-name"></span></div>
+          <div>Lvl: <span id="display-lvl">1</span></div>
+          <div>HP: <span id="display-hp">100</span>/<span id="display-maxhp">100</span></div>
+          <div>Glow: <span id="display-glow">20</span>/<span id="display-maxglow">20</span></div>
+          <div>Gold: <span id="display-gold">0</span></div>
+          <div>Leather: <span id="display-leather">0</span></div>
+        </div>
+
+        <div id="game-text">Welcome to Mulner Woods. The air is thick with the scent of pine and danger.</div>
+        <div id="game-actions"></div>
       </div>
     </section>
   </div>
 
+  <div class="tab-content" id="Updates">
+    <section>
+      <h2>Update Log</h2>
+      <p>04/06/26: Added the "Order of Corruption" RPG - Arc 1: Karlam.</p>
+      <p>03/05/25: Made the clicker game (Legacy).</p>
+    </section>
+  </div>
+
   <script>
-  // --- Tab switching functionality ---
-  const tabs = document.querySelectorAll('.tab-btn');
-  const contents = document.querySelectorAll('.tab-content');
+    // --- TAB SYSTEM ---
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      contents.forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
-      document.getElementById(tab.dataset.tab).classList.add('active');
-    });
-  });
-
-  // --- Tier List Setup ---
-  const tierItems = document.querySelectorAll('#tierlist .item');
-  const dropZones = document.querySelectorAll('.drop-zone');
-
-  tierItems.forEach(item => {
-    item.addEventListener('dragstart', handleDragStart);
-    item.addEventListener('dragend', handleDragEnd);
-    item.addEventListener('touchstart', handleTouchStart, {passive: false});
-    item.addEventListener('touchend', handleTouchEnd, {passive: false});
-    item.addEventListener('touchmove', handleTouchMove, {passive: false});
-  });
-
-  dropZones.forEach(zone => {
-    zone.addEventListener('dragover', handleDragOver);
-    zone.addEventListener('dragleave', handleDragLeave);
-    zone.addEventListener('drop', handleDrop);
-  });
-
-  // --- Desktop Drag & Drop ---
-  function handleDragStart(e) {
-    this.classList.add('dragging');
-  }
-
-  function handleDragEnd() {
-    this.classList.remove('dragging');
-    savePositions();
-  }
-
-  function handleDragOver(e) {
-    e.preventDefault();
-    this.classList.add('over');
-  }
-
-  function handleDragLeave() {
-    this.classList.remove('over');
-  }
-
-  function handleDrop(e) {
-    e.preventDefault();
-    const draggedItem = document.querySelector('.dragging');
-    if (draggedItem) {
-      this.appendChild(draggedItem);
-      this.classList.remove('over');
-      savePositions();
-    }
-  }
-
-  // --- Mobile Touch & Auto-Scroll Logic ---
-  let touchDraggedItem = null;
-  let scrollInterval = null;
-
-  function handleTouchStart(e) {
-    touchDraggedItem = this;
-    this.classList.add('dragging');
-    // Set fixed positioning so it follows finger regardless of scroll
-    this.style.position = 'fixed';
-    this.style.zIndex = '1000';
-    updateTouchPos(e);
-  }
-
-  function handleTouchMove(e) {
-    if (!touchDraggedItem) return;
-    e.preventDefault();
-    
-    const touch = e.touches[0];
-    
-    // Move element with finger (offset by half item size)
-    const offset = touchDraggedItem.offsetWidth / 2;
-    touchDraggedItem.style.left = `${touch.clientX - offset}px`;
-    touchDraggedItem.style.top = `${touch.clientY - offset}px`;
-
-    // --- AUTO-SCROLL LOGIC ---
-    const threshold = 100; // px from top/bottom to start scrolling
-    const scrollSpeed = 15;
-    
-    stopAutoScroll();
-
-    if (touch.clientY < threshold) {
-      scrollInterval = setInterval(() => window.scrollBy(0, -scrollSpeed), 16);
-    } else if (touch.clientY > window.innerHeight - threshold) {
-      scrollInterval = setInterval(() => window.scrollBy(0, scrollSpeed), 16);
-    }
-
-    // Highlighting drop zones
-    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
-    const dropZone = touchElement?.closest('.drop-zone');
-    
-    dropZones.forEach(zone => zone.classList.remove('over'));
-    if (dropZone) {
-      dropZone.classList.add('over');
-    }
-  }
-
-  function handleTouchEnd(e) {
-    if (!touchDraggedItem) return;
-    stopAutoScroll();
-
-    touchDraggedItem.style.position = '';
-    touchDraggedItem.style.zIndex = '';
-    touchDraggedItem.style.left = '';
-    touchDraggedItem.style.top = '';
-    touchDraggedItem.classList.remove('dragging');
-    
-    const touch = e.changedTouches[0];
-    const touchElement = document.elementFromPoint(touch.clientX, touch.clientY);
-    const dropZone = touchElement?.closest('.drop-zone');
-    
-    dropZones.forEach(zone => zone.classList.remove('over'));
-    
-    if (dropZone) {
-      dropZone.appendChild(touchDraggedItem);
-      savePositions();
-    }
-    
-    touchDraggedItem = null;
-  }
-
-  function stopAutoScroll() {
-    if (scrollInterval) {
-      clearInterval(scrollInterval);
-      scrollInterval = null;
-    }
-  }
-
-  function updateTouchPos(e) {
-    const touch = e.touches[0];
-    const offset = touchDraggedItem.offsetWidth / 2;
-    touchDraggedItem.style.left = `${touch.clientX - offset}px`;
-    touchDraggedItem.style.top = `${touch.clientY - offset}px`;
-  }
-
-  // --- Persistence Logic ---
-  function savePositions() {
-    const positions = {};
-    dropZones.forEach(zone => {
-      const tierName = zone.dataset.tier || 'pool';
-      positions[tierName] = Array.from(zone.children).map(item => item.textContent);
-    });
-    localStorage.setItem('tierListPositions', JSON.stringify(positions));
-  }
-
-  function loadPositions() {
-    const saved = localStorage.getItem('tierListPositions');
-    if (saved) {
-      const positions = JSON.parse(saved);
-      Object.keys(positions).forEach(tier => {
-        const zone = tier === 'pool' 
-          ? document.getElementById('item-pool') 
-          : document.querySelector(`[data-tier="${tier}"]`);
-        
-        if (zone) {
-          positions[tier].forEach(charName => {
-            const item = [...document.querySelectorAll('#tierlist .item')].find(el => el.textContent === charName);
-            if (item) zone.appendChild(item);
-          });
-        }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
       });
-    }
-  }
-
-  function resetTierList() {
-    const itemPool = document.getElementById('item-pool');
-    document.querySelectorAll('#tierlist .item').forEach(item => {
-      itemPool.appendChild(item);
     });
-    localStorage.removeItem('tierListPositions');
-  }
 
-  document.getElementById('reset-tierlist').addEventListener('click', resetTierList);
+    // --- TIER LIST (With Mobile Auto-Scroll) ---
+    const tierItems = document.querySelectorAll('#tierlist .item');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    let touchDraggedItem = null;
+    let scrollInterval = null;
 
-  window.addEventListener('DOMContentLoaded', () => {
-    loadPositions();
-  });
-</script>
+    tierItems.forEach(item => {
+      item.addEventListener('dragstart', function() { this.classList.add('dragging'); });
+      item.addEventListener('dragend', function() { this.classList.remove('dragging'); savePositions(); });
+      item.addEventListener('touchstart', handleTouchStart, {passive: false});
+      item.addEventListener('touchmove', handleTouchMove, {passive: false});
+      item.addEventListener('touchend', handleTouchEnd, {passive: false});
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', e => {
+        const dragged = document.querySelector('.dragging');
+        if (dragged) { zone.appendChild(dragged); zone.classList.remove('over'); savePositions(); }
+      });
+    });
+
+    function handleTouchStart(e) {
+      touchDraggedItem = this;
+      this.classList.add('dragging');
+      this.style.position = 'fixed';
+      this.style.zIndex = '1000';
+    }
+
+    function handleTouchMove(e) {
+      if (!touchDraggedItem) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      touchDraggedItem.style.left = `${touch.clientX - 40}px`;
+      touchDraggedItem.style.top = `${touch.clientY - 40}px`;
+
+      // Auto-scroll
+      const threshold = 80;
+      clearInterval(scrollInterval);
+      if (touch.clientY < threshold) scrollInterval = setInterval(() => window.scrollBy(0, -10), 16);
+      else if (touch.clientY > window.innerHeight - threshold) scrollInterval = setInterval(() => window.scrollBy(0, 10), 16);
+
+      const zone = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.drop-zone');
+      dropZones.forEach(z => z.classList.remove('over'));
+      if (zone) zone.classList.add('over');
+    }
+
+    function handleTouchEnd(e) {
+      if (!touchDraggedItem) return;
+      clearInterval(scrollInterval);
+      touchDraggedItem.style.position = '';
+      touchDraggedItem.style.left = '';
+      touchDraggedItem.style.top = '';
+      touchDraggedItem.classList.remove('dragging');
+      const touch = e.changedTouches[0];
+      const zone = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.drop-zone');
+      if (zone) zone.appendChild(touchDraggedItem);
+      savePositions();
+      touchDraggedItem = null;
+    }
+
+    function savePositions() {
+      const pos = {};
+      dropZones.forEach(z => pos[z.dataset.tier || 'pool'] = Array.from(z.children).map(i => i.textContent));
+      localStorage.setItem('tierListPositions', JSON.stringify(pos));
+    }
+
+    // --- RPG GAME ENGINE ---
+    let gameState = {
+      player: { name: "", gender: "", lvl: 1, xp: 0, hp: 100, maxHp: 100, glow: 20, maxGlow: 20, gold: 50, leather: 0, atk: 10, def: 0 },
+      location: "town", currentEnemy: null
+    };
+
+    const enemies = [
+      { name: "Wolf", hp: 35, atk: 6, gold: 8, leather: 1, xp: 25 },
+      { name: "Alpha Wolf", hp: 70, atk: 14, gold: 20, leather: 3, xp: 60 },
+      { name: "Forest Bear", hp: 140, atk: 24, gold: 50, leather: 10, xp: 180 }
+    ];
+
+    document.getElementById('start-game-btn').addEventListener('click', () => {
+      const n = document.getElementById('char-name').value;
+      if (!n) return alert("Please name your hero!");
+      gameState.player.name = n;
+      gameState.player.gender = document.getElementById('char-gender').value;
+      document.getElementById('setup-screen').style.display = 'none';
+      document.getElementById('main-game-screen').style.display = 'block';
+      updateGameUI();
+      renderGameMenu();
+    });
+
+    function updateGameUI() {
+      document.getElementById('display-name').textContent = gameState.player.name;
+      document.getElementById('display-lvl').textContent = gameState.player.lvl;
+      document.getElementById('display-hp').textContent = Math.max(0, Math.ceil(gameState.player.hp));
+      document.getElementById('display-maxhp').textContent = gameState.player.maxHp;
+      document.getElementById('display-glow').textContent = Math.floor(gameState.player.glow);
+      document.getElementById('display-maxglow').textContent = gameState.player.maxGlow;
+      document.getElementById('display-gold').textContent = gameState.player.gold;
+      document.getElementById('display-leather').textContent = gameState.player.leather;
+      
+      // Level up logic
+      if (gameState.player.xp >= gameState.player.lvl * 100) {
+        gameState.player.xp = 0;
+        gameState.player.lvl++;
+        gameState.player.maxHp += 20;
+        gameState.player.hp = gameState.player.maxHp;
+        gameState.player.atk += 5;
+        gameLog("LEVEL UP! You feel stronger.");
+      }
+    }
+
+    function gameLog(m) {
+      const logBox = document.getElementById('game-text');
+      logBox.innerHTML += `<br>> ${m}`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function renderGameMenu() {
+      const area = document.getElementById('game-actions');
+      area.innerHTML = "";
+      if (gameState.location === "town") {
+        gameBtn("Go to Mulner Woods", () => { gameState.location = "woods"; gameLog("Entering the forest..."); renderGameMenu(); });
+        gameBtn("Blacksmith (Craft/Buy)", renderBlacksmith);
+        gameBtn("General Store (Sell)", renderStore);
+        gameBtn("Rest at Inn (10 Gold)", () => {
+          if (gameState.player.gold >= 10) {
+            gameState.player.gold -= 10; gameState.player.hp = gameState.player.maxHp; 
+            gameState.player.glow = gameState.player.maxGlow; gameLog("You rested."); updateGameUI();
+          } else gameLog("Not enough gold.");
+        });
+      } else if (gameState.location === "woods") {
+        gameBtn("Explore Deeper", startBattle);
+        gameBtn("Return to Town", () => { gameState.location = "town"; renderGameMenu(); });
+      }
+    }
+
+    function gameBtn(t, f) {
+      const b = document.createElement('button');
+      b.textContent = t; b.onclick = f;
+      document.getElementById('game-actions').appendChild(b);
+    }
+
+    function startBattle() {
+      const r = Math.random();
+      const eBase = r < 0.6 ? enemies[0] : (r < 0.9 ? enemies[1] : enemies[2]);
+      gameState.currentEnemy = { ...eBase };
+      gameState.location = "combat";
+      gameLog(`A ${gameState.currentEnemy.name} blocks your path!`);
+      renderCombatUI();
+    }
+
+    function renderCombatUI() {
+      const area = document.getElementById('game-actions');
+      area.innerHTML = "";
+      gameBtn("Attack", () => fightTurn("atk"));
+      gameBtn("Dark Slash (5 Glow)", () => fightTurn("slash"));
+    }
+
+    function fightTurn(type) {
+      let pDmg = gameState.player.atk;
+      if (type === "slash") {
+        if (gameState.player.glow >= 5) { pDmg *= 2; gameState.player.glow -= 5; gameLog("DARK SLASH!"); }
+        else { gameLog("No Glow left!"); return; }
+      }
+
+      // Player attacks
+      gameState.currentEnemy.hp -= pDmg;
+      gameLog(`Hit ${gameState.currentEnemy.name} for ${pDmg}.`);
+
+      if (gameState.currentEnemy.hp <= 0) {
+        gameLog(`Defeated! Found ${gameState.currentEnemy.gold}g and ${gameState.currentEnemy.leather} leather.`);
+        gameState.player.gold += gameState.currentEnemy.gold;
+        gameState.player.leather += gameState.currentEnemy.leather;
+        gameState.player.xp += gameState.currentEnemy.xp;
+        gameState.location = "woods";
+        saveRPG(); updateGameUI(); renderGameMenu(); return;
+      }
+
+      // Enemy attacks
+      let eDmg = Math.max(1, gameState.currentEnemy.atk - gameState.player.def);
+      gameState.player.hp -= eDmg;
+      gameLog(`${gameState.currentEnemy.name} hits you for ${eDmg}.`);
+
+      if (gameState.player.hp <= 0) {
+        gameLog("You collapsed. A stranger dragged you back to town.");
+        gameState.player.hp = 20; gameState.location = "town"; renderGameMenu();
+      }
+      updateGameUI();
+    }
+
+    function renderBlacksmith() {
+      const area = document.getElementById('game-actions');
+      area.innerHTML = "";
+      gameLog("Smith: 'I can make gear if you have the leather.'");
+      gameBtn("Craft Leather Chest (15 Lthr)", () => {
+        if(gameState.player.leather >= 15) { gameState.player.leather -= 15; gameState.player.def += 10; gameLog("Crafted Leather Chest!"); updateGameUI(); }
+        else gameLog("Not enough leather.");
+      });
+      gameBtn("Buy Iron Sword (100 Gold)", () => {
+        if(gameState.player.gold >= 100) { gameState.player.gold -= 100; gameState.player.atk += 15; gameLog("Bought Iron Sword!"); updateGameUI(); }
+        else gameLog("Not enough gold.");
+      });
+      gameBtn("Back", renderGameMenu);
+    }
+
+    function renderStore() {
+      const area = document.getElementById('game-actions'); area.innerHTML = "";
+      gameLog("Store: 'I'll buy your materials.'");
+      gameBtn("Sell 1 Leather (4 Gold)", () => {
+        if(gameState.player.leather > 0) { gameState.player.leather--; gameState.player.gold += 4; updateGameUI(); }
+      });
+      gameBtn("Back", renderGameMenu);
+    }
+
+    function saveRPG() { localStorage.setItem('oc_rpg_data', JSON.stringify(gameState)); }
+    function loadRPG() {
+      const d = localStorage.getItem('oc_rpg_data');
+      if (d) {
+        gameState = JSON.parse(d);
+        document.getElementById('setup-screen').style.display = 'none';
+        document.getElementById('main-game-screen').style.display = 'block';
+        updateGameUI(); renderGameMenu();
+      }
+    }
+
+    window.onload = () => {
+      loadRPG();
+      const savedPos = localStorage.getItem('tierListPositions');
+      if (savedPos) {
+        const p = JSON.parse(savedPos);
+        Object.keys(p).forEach(t => {
+          const z = t === 'pool' ? document.getElementById('item-pool') : document.querySelector(`[data-tier="${t}"]`);
+          p[t].forEach(name => {
+            const item = [...document.querySelectorAll('.item')].find(i => i.textContent === name);
+            if (item && z) z.appendChild(item);
+          });
+        });
+      }
+    };
+
+    document.getElementById('reset-tierlist').onclick = () => {
+      const pool = document.getElementById('item-pool');
+      document.querySelectorAll('.item').forEach(i => pool.appendChild(i));
+      localStorage.removeItem('tierListPositions');
+    };
+  </script>
 </body>
 </html>
