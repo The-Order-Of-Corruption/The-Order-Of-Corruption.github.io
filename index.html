@@ -3,479 +3,453 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="description" content="The Order of Corruption is a fantasy story featuring Glow powers, corruption, and epic character battles.">
-  <meta name="keywords" content="fantasy story, Glow powers, corruption, The Order of Corruption, magic world">
-  <meta name="author" content="Your Name">
-  <meta name="google-site-verification" content="HAmEA7iyxGdA6LADuzqznaR5wfPQ7ZcNGQaZqVbTzeY" />
   <title>The Order of Corruption</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
-    body {
-      margin: 0;
-      font-family: 'Cinzel', serif;
-      background: #000000;
-      color: #ffffff;
-      overflow-x: hidden;
-    }
+    :root { --gold: #ffd700; --hp: #ff4d4d; --glow: #4da6ff; --bg: #0a0a0a; --panel: #1a1a1a; }
+    body { margin: 0; font-family: 'Cinzel', serif; background: #000; color: #fff; overflow-x: hidden; }
+    
+    header { background: #111; padding: 15px; text-align: center; border-bottom: 2px solid #333; }
+    nav { display: flex; justify-content: center; background: #0d0d0d; padding: 10px; gap: 8px; flex-wrap: wrap; border-bottom: 1px solid #333; }
+    nav button { background: none; border: 1px solid #444; color: #ccc; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-family: 'Cinzel'; transition: 0.3s; }
+    nav button.active { background: #fff; color: #000; border-color: #fff; }
 
-    header {
-      background: #111;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #444;
-    }
+    .tab-content { display: none; padding: 20px; animation: fadeIn 0.4s; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.8rem;
-      color: #fff;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
+    section { max-width: 900px; margin: auto; background: var(--panel); padding: 25px; border-radius: 8px; border: 1px solid #333; }
 
-    nav {
-      display: flex;
-      justify-content: center;
-      background-color: #0d0d0d;
-      padding: 10px;
-      gap: 10px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #333;
-    }
+    /* RPG UI STYLES */
+    #game-container { font-family: 'Roboto Mono', monospace; }
+    .game-header { display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; margin-bottom: 15px; background: #111; padding: 10px; border-radius: 5px; border: 1px solid #444; }
+    .bar-container { background: #333; height: 12px; border-radius: 6px; margin: 4px 0; overflow: hidden; position: relative; }
+    .bar-fill { height: 100%; transition: width 0.3s ease; }
+    .hp-bar { background: var(--hp); }
+    .glow-bar { background: var(--glow); }
+    
+    #game-screen { background: #050505; border: 2px solid #444; border-radius: 8px; padding: 15px; margin-bottom: 15px; min-height: 250px; display: flex; flex-direction: column; }
+    #log-output { flex-grow: 1; overflow-y: auto; font-size: 0.9rem; color: #aaa; max-height: 180px; margin-bottom: 15px; padding-right: 5px; }
+    .log-entry { margin-bottom: 5px; border-left: 2px solid #444; padding-left: 8px; }
+    .log-important { color: var(--gold); font-weight: bold; }
+    .log-enemy { color: var(--hp); }
 
-    nav button {
-      background: none;
-      border: 2px solid #aaa;
-      color: #eee;
-      padding: 10px 15px;
-      cursor: pointer;
-      transition: 0.3s;
-      border-radius: 6px;
-      font-weight: bold;
-    }
+    .enemy-panel { background: #222; border: 1px solid #444; padding: 10px; margin-bottom: 10px; border-radius: 4px; text-align: center; }
+    
+    #game-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-action { background: #2a2a2a; color: white; border: 1px solid #555; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Cinzel'; }
+    .btn-action:hover { background: #444; border-color: #eee; }
+    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    nav button:hover,
-    nav button.active {
-      background-color: #fff;
-      color: #000;
-      border-color: #fff;
-    }
+    /* STATS & EQ MENU */
+    .menu-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid var(--gold); padding: 20px; z-index: 2000; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; border-radius: 10px; display: none; }
+    .eq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .eq-slot { background: #111; padding: 8px; border: 1px solid #444; border-radius: 4px; font-size: 0.8rem; }
+    .stat-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #333; }
+    .point-btn { background: var(--gold); color: black; border: none; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-weight: bold; }
 
-    .tab-content {
-      display: none;
-      padding: 30px;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    section {
-      max-width: 900px;
-      margin: auto;
-      background-color: #111;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-      border: 1px solid #333;
-    }
-
-    h2 { color: #ffffff; border-bottom: 1px solid #444; padding-bottom: 5px; }
-    p, li { line-height: 1.6; color: #ccc; }
-    a { color: #fff; text-decoration: underline; }
-
-    /* Tier List Styles */
-    .tier { display: flex; align-items: center; margin-bottom: 15px; border: 2px solid #444; border-radius: 8px; padding: 10px; background: #2a2a2a; }
-    .tier-label { width: 60px; font-size: 20px; font-weight: bold; text-align: center; margin-right: 10px; }
-    .drop-zone { flex: 1; display: flex; flex-wrap: wrap; min-height: 60px; padding: 10px; background-color: #333; border-radius: 8px; }
-    .item { width: 100px; height: 100px; margin: 5px; background-color: white; color: black; border-radius: 6px; text-align: center; line-height: 100px; cursor: move; user-select: none; font-weight: bold; touch-action: none; z-index: 10; }
-    .item.dragging { opacity: 0.5; pointer-events: none; }
-    .drop-zone.over { border: 2px dashed #aaa; background-color: #444; }
-
-    /* Game Styles */
-    #game-text { min-height: 200px; max-height: 300px; background: #050505; border: 1px solid #444; padding: 15px; margin-bottom: 15px; overflow-y: auto; font-family: monospace; color: #0f0; border-radius: 4px; }
-    #game-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    #game-actions button { background: #222; color: #fff; border: 1px solid #555; padding: 12px; cursor: pointer; border-radius: 4px; font-family: 'Cinzel', serif; font-size: 0.9rem; }
-    #game-actions button:hover { background: #444; }
-    .stat-box { background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444; margin-bottom: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; }
-
-    @media (max-width: 600px) {
-      nav { flex-direction: column; align-items: center; }
-      .item { width: 80px !important; height: 80px !important; line-height: 80px !important; font-size: 12px; }
-      #game-actions { grid-template-columns: 1fr; }
-    }
+    /* Tier List - Original Styles preserved */
+    .tier { display: flex; align-items: center; margin-bottom: 10px; border: 1px solid #444; }
+    .tier-label { width: 50px; text-align: center; font-weight: bold; font-size: 1.5rem; }
+    .drop-zone { flex-grow: 1; min-height: 80px; display: flex; flex-wrap: wrap; background: #222; padding: 5px; }
+    .item { width: 70px; height: 70px; background: #fff; color: #000; margin: 5px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; text-align: center; cursor: grab; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>The Order of Corruption</h1>
-  </header>
+  <header><h1>The Order of Corruption</h1></header>
 
   <nav>
-    <button class="tab-btn active" data-tab="home">Home</button>
-    <button class="tab-btn" data-tab="chapters">The Story</button>
-    <button class="tab-btn" data-tab="the-world">The World</button>
-    <button class="tab-btn" data-tab="tierlist">Tier List</button>
-    <button class="tab-btn" data-tab="game">The Game</button>
-    <button class="tab-btn" data-tab="Updates">Updates</button>
+    <button class="nav-link active" onclick="showTab('home')">Home</button>
+    <button class="nav-link" onclick="showTab('tierlist')">Tier List</button>
+    <button class="nav-link" onclick="showTab('game')">Play Game</button>
   </nav>
 
-  <div class="tab-content active" id="home">
+  <div id="home" class="tab-content active">
     <section>
-      <h2>Welcome to the Order</h2>
-      <p>It's a story set in a fantasy world in which the main topics of the story are: <strong>Corruption, Pride, and Greed</strong>.</p>
-      <p>This story is aimed towards teenagers and up. There are themes of <strong>self-harm, death, and discrimination</strong>.</p>
-      <p>The story's main character is a young boy named <strong>Corin</strong>. He lost his parents at a young age and is now part of a crew of bandits led by an ex-Captain of the Karlam Military.</p>
-      <p><em>Author- Piotr A</em></p>
+      <h2>Welcome to Trikion</h2>
+      <p>A fantasy story of Corruption, Pride, and Greed. Follow Corin's journey through the nations of Karlam and beyond.</p>
     </section>
   </div>
 
-  <div class="tab-content" id="chapters">
+  <div id="tierlist" class="tab-content">
     <section>
-      <h2>Read the Story</h2>
-      <p>The story is available online, covering <strong>Chapters 1 – 239</strong>.</p>
-      <p><a href="https://editor.reedsy.com/s/lz7m4EY" target="_blank">Read The Order of Corruption</a></p>
-    </section>
-  </div>
-
-  <div class="tab-content" id="the-world">
-    <section>
-      <h2>The World of Trikion</h2>
-      <p><strong>Glow:</strong> The power system of the story. It is the manifestation of both the mind and the heart.</p>
-      <p><strong>Locations:</strong> The main countries are Karlam, Shenghua, Frenkon, and Icium.</p>
-    </section>
-  </div>
-
-  <div class="tab-content" id="tierlist">
-    <section>
-      <h2>Character Tier List</h2>
-      <div class="tier"><div class="tier-label">S</div><div class="drop-zone" data-tier="S"></div></div>
-      <div class="tier"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
-      <div class="tier"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
-      <div class="tier"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
-      <div class="tier"><div class="tier-label">D</div><div class="drop-zone" data-tier="D"></div></div>
-
-      <div style="margin-top: 30px;">
-        <h3>Characters:</h3>
-        <div class="drop-zone" id="item-pool">
-          <div class="item" draggable="true">Corin</div>
-          <div class="item" draggable="true">Han</div>
-          <div class="item" draggable="true">Oswald</div>
-          <div class="item" draggable="true">Chiz</div>
-          <div class="item" draggable="true">York</div>
-          <div class="item" draggable="true">Mikael</div>
-          <div class="item" draggable="true">Kaito</div>
-        </div>
+      <h2>Character Tiers</h2>
+      <div class="tier" style="border-left: 10px solid #ff7f7f;"><div class="tier-label">S</div><div class="drop-zone" data-tier="S"></div></div>
+      <div class="tier" style="border-left: 10px solid #ffbf7f;"><div class="tier-label">A</div><div class="drop-zone" data-tier="A"></div></div>
+      <div class="tier" style="border-left: 10px solid #ffff7f;"><div class="tier-label">B</div><div class="drop-zone" data-tier="B"></div></div>
+      <div class="tier" style="border-left: 10px solid #7fff7f;"><div class="tier-label">C</div><div class="drop-zone" data-tier="C"></div></div>
+      
+      <div id="item-pool" class="drop-zone" style="margin-top:20px; border:1px dashed #555;">
+        <div class="item" draggable="true">Corin</div><div class="item" draggable="true">Han</div>
+        <div class="item" draggable="true">Oswald</div><div class="item" draggable="true">Chiz</div>
+        <div class="item" draggable="true">York</div><div class="item" draggable="true">Gorm</div>
       </div>
-      <button id="reset-tierlist" style="padding:10px; background:#f44336; border:none; color:white; border-radius:5px; margin-top:20px; cursor:pointer;">Reset Tier List</button>
     </section>
   </div>
 
-  <div class="tab-content" id="game">
-    <section>
+  <div id="game" class="tab-content">
+    <section id="game-container">
       <div id="setup-screen">
-        <h2>Start Your Adventure</h2>
-        <p>Step into the world of Trikion. Create your character to begin Arc 1: Karlam.</p>
-        <input type="text" id="char-name" placeholder="Character Name..." style="padding:12px; width:80%; margin-bottom:10px; border-radius:5px; border:1px solid #444; background:#222; color:#fff;"><br>
-        <select id="char-gender" style="padding:12px; width:85%; margin-bottom:20px; border-radius:5px; border:1px solid #444; background:#222; color:#fff;">
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Non-Binary</option>
-        </select><br>
-        <button id="start-game-btn" style="padding:15px 40px; background:#fff; color:#000; border:none; cursor:pointer; font-weight:bold; border-radius:5px;">Begin Journey</button>
+        <h2>Enter the World</h2>
+        <input type="text" id="p-name" placeholder="Name..." style="padding:10px; width:100%; box-sizing:border-box; margin-bottom:10px;">
+        <button class="btn-action" style="width:100%" onclick="initGame()">Start Adventure</button>
       </div>
 
-      <div id="main-game-screen" style="display:none;">
-        <div class="stat-box">
-          <div>Name: <span id="display-name"></span></div>
-          <div>Lvl: <span id="display-lvl">1</span></div>
-          <div>HP: <span id="display-hp">100</span>/<span id="display-maxhp">100</span></div>
-          <div>Glow: <span id="display-glow">20</span>/<span id="display-maxglow">20</span></div>
-          <div>Gold: <span id="display-gold">0</span></div>
-          <div>Leather: <span id="display-leather">0</span></div>
+      <div id="game-ui" style="display:none">
+        <div class="game-header">
+          <div>
+            <div id="ui-name" style="font-weight:bold; color:var(--gold)">Player</div>
+            <div style="font-size:0.8rem">LVL <span id="ui-lvl">1</span> | <span id="ui-region">Mulner</span></div>
+          </div>
+          <div>
+            <div class="bar-container"><div id="hp-fill" class="bar-fill hp-bar" style="width:100%"></div></div>
+            <div class="bar-container"><div id="glow-fill" class="bar-fill glow-bar" style="width:100%"></div></div>
+          </div>
         </div>
 
-        <div id="game-text">Welcome to Mulner Woods. The air is thick with the scent of pine and danger.</div>
-        <div id="game-actions"></div>
+        <div id="enemy-ui" class="enemy-panel" style="display:none">
+          <div id="enemy-name" style="color:var(--hp); font-weight:bold">Enemy</div>
+          <div class="bar-container" style="height:8px;"><div id="enemy-hp-fill" class="bar-fill hp-bar" style="width:100%"></div></div>
+          <div id="enemy-hp-text" style="font-size:0.7rem">100 / 100 HP</div>
+        </div>
+
+        <div id="game-screen">
+          <div id="log-output"></div>
+          <div id="game-controls"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:5px;">
+          <button class="btn-action" style="padding:5px; font-size:0.7rem" onclick="toggleMenu('stats-menu')">STATS</button>
+          <button class="btn-action" style="padding:5px; font-size:0.7rem" onclick="toggleMenu('eq-menu')">EQUIP</button>
+          <button class="btn-action" style="padding:5px; font-size:0.7rem" onclick="toggleMenu('skill-menu')">SKILLS</button>
+        </div>
       </div>
     </section>
   </div>
 
-  <div class="tab-content" id="Updates">
-    <section>
-      <h2>Update Log</h2>
-      <p>04/06/26: Added the "Order of Corruption" RPG - Arc 1: Karlam.</p>
-      <p>03/05/25: Made the clicker game (Legacy).</p>
-    </section>
+  <div id="stats-menu" class="menu-overlay">
+    <h3>Character Stats</h3>
+    <p>Points Available: <span id="stat-points">0</span></p>
+    <div class="stat-row">Strength <span id="s-str">0</span> <button class="point-btn" onclick="addStat('str')">+</button></div>
+    <div class="stat-row">Speed <span id="s-spd">0</span> <button class="point-btn" onclick="addStat('spd')">+</button></div>
+    <div class="stat-row">Defense <span id="s-def">0</span> <button class="point-btn" onclick="addStat('def')">+</button></div>
+    <div class="stat-row">Glow <span id="s-glow">0</span> <button class="point-btn" onclick="addStat('glow')">+</button></div>
+    <button class="btn-action" style="width:100%; margin-top:15px" onclick="toggleMenu('stats-menu')">Close</button>
+  </div>
+
+  <div id="eq-menu" class="menu-overlay">
+    <h3>Equipment</h3>
+    <div class="eq-grid">
+      <div class="eq-slot">Helmet: <br><span id="eq-helmet">None</span></div>
+      <div class="eq-slot">Chest: <br><span id="eq-chest">None</span></div>
+      <div class="eq-slot">Pants: <br><span id="eq-pants">None</span></div>
+      <div class="eq-slot">Boots: <br><span id="eq-boots">None</span></div>
+      <div class="eq-slot">Weapon: <br><span id="eq-weapon">Iron Dagger</span></div>
+      <div class="eq-slot">Accessory: <br><span id="eq-acc">None</span></div>
+    </div>
+    <p style="font-size:0.8rem; color:var(--gold)">Gold: <span id="ui-gold">50</span> | Leather: <span id="ui-leather">0</span></p>
+    <button class="btn-action" style="width:100%; margin-top:15px" onclick="toggleMenu('eq-menu')">Close</button>
+  </div>
+
+  <div id="skill-menu" class="menu-overlay">
+    <h3>Skill Slots</h3>
+    <div id="skill-list" style="font-size:0.8rem">
+      1. <span id="sk-1">Focus (Unlocked)</span><br>
+      2. Locked<br>3. Locked<br>4. Locked<br>5. Locked<br>6. Locked
+    </div>
+    <button class="btn-action" style="width:100%; margin-top:15px" onclick="toggleMenu('skill-menu')">Close</button>
   </div>
 
   <script>
-    // --- TAB SYSTEM ---
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
-
-    // --- TIER LIST (With Mobile Auto-Scroll) ---
-    const tierItems = document.querySelectorAll('#tierlist .item');
-    const dropZones = document.querySelectorAll('.drop-zone');
-    let touchDraggedItem = null;
-    let scrollInterval = null;
-
-    tierItems.forEach(item => {
-      item.addEventListener('dragstart', function() { this.classList.add('dragging'); });
-      item.addEventListener('dragend', function() { this.classList.remove('dragging'); savePositions(); });
-      item.addEventListener('touchstart', handleTouchStart, {passive: false});
-      item.addEventListener('touchmove', handleTouchMove, {passive: false});
-      item.addEventListener('touchend', handleTouchEnd, {passive: false});
-    });
-
-    dropZones.forEach(zone => {
-      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
-      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
-      zone.addEventListener('drop', e => {
-        const dragged = document.querySelector('.dragging');
-        if (dragged) { zone.appendChild(dragged); zone.classList.remove('over'); savePositions(); }
-      });
-    });
-
-    function handleTouchStart(e) {
-      touchDraggedItem = this;
-      this.classList.add('dragging');
-      this.style.position = 'fixed';
-      this.style.zIndex = '1000';
+    // --- BASIC SYSTEM ---
+    function showTab(id) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.currentTarget.classList.add('active');
     }
 
-    function handleTouchMove(e) {
-      if (!touchDraggedItem) return;
-      e.preventDefault();
-      const touch = e.touches[0];
-      touchDraggedItem.style.left = `${touch.clientX - 40}px`;
-      touchDraggedItem.style.top = `${touch.clientY - 40}px`;
-
-      // Auto-scroll
-      const threshold = 80;
-      clearInterval(scrollInterval);
-      if (touch.clientY < threshold) scrollInterval = setInterval(() => window.scrollBy(0, -10), 16);
-      else if (touch.clientY > window.innerHeight - threshold) scrollInterval = setInterval(() => window.scrollBy(0, 10), 16);
-
-      const zone = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.drop-zone');
-      dropZones.forEach(z => z.classList.remove('over'));
-      if (zone) zone.classList.add('over');
-    }
-
-    function handleTouchEnd(e) {
-      if (!touchDraggedItem) return;
-      clearInterval(scrollInterval);
-      touchDraggedItem.style.position = '';
-      touchDraggedItem.style.left = '';
-      touchDraggedItem.style.top = '';
-      touchDraggedItem.classList.remove('dragging');
-      const touch = e.changedTouches[0];
-      const zone = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.drop-zone');
-      if (zone) zone.appendChild(touchDraggedItem);
-      savePositions();
-      touchDraggedItem = null;
-    }
-
-    function savePositions() {
-      const pos = {};
-      dropZones.forEach(z => pos[z.dataset.tier || 'pool'] = Array.from(z.children).map(i => i.textContent));
-      localStorage.setItem('tierListPositions', JSON.stringify(pos));
-    }
-
-    // --- RPG GAME ENGINE ---
-    let gameState = {
-      player: { name: "", gender: "", lvl: 1, xp: 0, hp: 100, maxHp: 100, glow: 20, maxGlow: 20, gold: 50, leather: 0, atk: 10, def: 0 },
-      location: "town", currentEnemy: null
+    // --- GAME DATA ---
+    let p = {
+      name: "Player", lvl: 1, xp: 0, gold: 50, leather: 0,
+      hp: 100, maxHp: 100, glow: 20, maxGlow: 20,
+      points: 0, str: 5, spd: 5, def: 5, glowStat: 5,
+      region: "Mulner (Lv 1-6)",
+      skills: ["Focus"],
+      activeBuffs: [],
+      eq: { helmet: "None", chest: "None", pants: "None", boots: "None", weapon: "Iron Dagger", acc: "None" }
     };
 
-    const enemies = [
-      { name: "Wolf", hp: 35, atk: 6, gold: 8, leather: 1, xp: 25 },
-      { name: "Alpha Wolf", hp: 70, atk: 14, gold: 20, leather: 3, xp: 60 },
-      { name: "Forest Bear", hp: 140, atk: 24, gold: 50, leather: 10, xp: 180 }
-    ];
+    let combat = { active: false, enemy: null, turn: "player", state: "normal" };
 
-    document.getElementById('start-game-btn').addEventListener('click', () => {
-      const n = document.getElementById('char-name').value;
-      if (!n) return alert("Please name your hero!");
-      gameState.player.name = n;
-      gameState.player.gender = document.getElementById('char-gender').value;
+    const regions = {
+      mulner: { name: "Mulner Woods", lv: "1-6", enemies: [
+        { n: "Wolf", hp: 40, atk: 8, spd: 4, gold: 5, l: 1, xp: 20 },
+        { n: "Alpha Wolf", hp: 80, atk: 15, spd: 7, gold: 12, l: 3, xp: 50 },
+        { n: "Alpha Boar", hp: 150, atk: 25, spd: 3, gold: 30, l: 6, xp: 120 }
+      ]},
+      berezino: { name: "Berezino", lv: "6-14", enemies: [
+        { n: "Weak Bandit", hp: 250, atk: 40, spd: 12, gold: 60, l: 0, xp: 300 },
+        { n: "Average Bandit", hp: 450, atk: 70, spd: 15, gold: 120, l: 0, xp: 650 },
+        { n: "Weak Soldier", hp: 800, atk: 100, spd: 10, gold: 200, l: 0, xp: 1200 }
+      ]}
+    };
+
+    function initGame() {
+      const nameIn = document.getElementById('p-name').value;
+      if(nameIn) p.name = nameIn;
       document.getElementById('setup-screen').style.display = 'none';
-      document.getElementById('main-game-screen').style.display = 'block';
-      updateGameUI();
-      renderGameMenu();
-    });
+      document.getElementById('game-ui').style.display = 'block';
+      updateUI();
+      gameLog("You arrive at Mulner Woods. A local trainer waves you over.");
+      mainMenu();
+    }
 
-    function updateGameUI() {
-      document.getElementById('display-name').textContent = gameState.player.name;
-      document.getElementById('display-lvl').textContent = gameState.player.lvl;
-      document.getElementById('display-hp').textContent = Math.max(0, Math.ceil(gameState.player.hp));
-      document.getElementById('display-maxhp').textContent = gameState.player.maxHp;
-      document.getElementById('display-glow').textContent = Math.floor(gameState.player.glow);
-      document.getElementById('display-maxglow').textContent = gameState.player.maxGlow;
-      document.getElementById('display-gold').textContent = gameState.player.gold;
-      document.getElementById('display-leather').textContent = gameState.player.leather;
+    function gameLog(msg, type='') {
+      const log = document.getElementById('log-output');
+      const div = document.createElement('div');
+      div.className = `log-entry ${type}`;
+      div.innerHTML = `> ${msg}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function updateUI() {
+      document.getElementById('ui-name').textContent = p.name;
+      document.getElementById('ui-lvl').textContent = p.lvl;
+      document.getElementById('ui-region').textContent = p.region;
+      document.getElementById('hp-fill').style.width = (p.hp / p.maxHp * 100) + "%";
+      document.getElementById('glow-fill').style.width = (p.glow / p.maxGlow * 100) + "%";
+      document.getElementById('ui-gold').textContent = p.gold;
+      document.getElementById('ui-leather').textContent = p.leather;
+      document.getElementById('stat-points').textContent = p.points;
+      document.getElementById('s-str').textContent = p.str;
+      document.getElementById('s-spd').textContent = p.spd;
+      document.getElementById('s-def').textContent = p.def;
+      document.getElementById('s-glow').textContent = p.glowStat;
       
-      // Level up logic
-      if (gameState.player.xp >= gameState.player.lvl * 100) {
-        gameState.player.xp = 0;
-        gameState.player.lvl++;
-        gameState.player.maxHp += 20;
-        gameState.player.hp = gameState.player.maxHp;
-        gameState.player.atk += 5;
-        gameLog("LEVEL UP! You feel stronger.");
+      if(p.xp >= p.lvl * 100) {
+        p.xp = 0; p.lvl++; p.points += 5;
+        gameLog(`LEVEL UP! You are now level ${p.lvl}. You gained 5 Stat Points.`, 'log-important');
       }
     }
 
-    function gameLog(m) {
-      const logBox = document.getElementById('game-text');
-      logBox.innerHTML += `<br>> ${m}`;
-      logBox.scrollTop = logBox.scrollHeight;
+    function toggleMenu(id) {
+      const m = document.getElementById(id);
+      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
     }
 
-    function renderGameMenu() {
-      const area = document.getElementById('game-actions');
-      area.innerHTML = "";
-      if (gameState.location === "town") {
-        gameBtn("Go to Mulner Woods", () => { gameState.location = "woods"; gameLog("Entering the forest..."); renderGameMenu(); });
-        gameBtn("Blacksmith (Craft/Buy)", renderBlacksmith);
-        gameBtn("General Store (Sell)", renderStore);
-        gameBtn("Rest at Inn (10 Gold)", () => {
-          if (gameState.player.gold >= 10) {
-            gameState.player.gold -= 10; gameState.player.hp = gameState.player.maxHp; 
-            gameState.player.glow = gameState.player.maxGlow; gameLog("You rested."); updateGameUI();
-          } else gameLog("Not enough gold.");
-        });
-      } else if (gameState.location === "woods") {
-        gameBtn("Explore Deeper", startBattle);
-        gameBtn("Return to Town", () => { gameState.location = "town"; renderGameMenu(); });
+    function addStat(type) {
+      if(p.points > 0) {
+        p.points--; p[type]++;
+        if(type === 'glow') p.maxGlow += 10;
+        updateUI();
       }
     }
 
-    function gameBtn(t, f) {
+    // --- BUTTON SYSTEM ---
+    function clearBtns() { document.getElementById('game-controls').innerHTML = ""; }
+    function addBtn(txt, func, dis=false) {
       const b = document.createElement('button');
-      b.textContent = t; b.onclick = f;
-      document.getElementById('game-actions').appendChild(b);
+      b.className = "btn-action";
+      b.textContent = txt;
+      b.onclick = func;
+      b.disabled = dis;
+      document.getElementById('game-controls').appendChild(b);
     }
 
-    function startBattle() {
-      const r = Math.random();
-      const eBase = r < 0.6 ? enemies[0] : (r < 0.9 ? enemies[1] : enemies[2]);
-      gameState.currentEnemy = { ...eBase };
-      gameState.location = "combat";
-      gameLog(`A ${gameState.currentEnemy.name} blocks your path!`);
-      renderCombatUI();
+    // --- LOCATIONS ---
+    function mainMenu() {
+      clearBtns();
+      p.hp = p.maxHp; p.glow = p.maxGlow; // Fully heal in town
+      updateUI();
+      addBtn("Explore Woods", exploreMulner);
+      addBtn("Talk to Trainer", talkTrainer);
+      addBtn("Visit Tavern", visitTavern);
+      addBtn("Blacksmith", visitSmith);
     }
 
-    function renderCombatUI() {
-      const area = document.getElementById('game-actions');
-      area.innerHTML = "";
-      gameBtn("Attack", () => fightTurn("atk"));
-      gameBtn("Dark Slash (5 Glow)", () => fightTurn("slash"));
+    function exploreMulner() {
+      clearBtns();
+      gameLog("You wander into the tall grass...");
+      const roll = Math.random();
+      let enemy;
+      if(roll < 0.6) enemy = {...regions.mulner.enemies[0]};
+      else if(roll < 0.9) enemy = {...regions.mulner.enemies[1]};
+      else enemy = {...regions.mulner.enemies[2]};
+      startCombat(enemy);
     }
 
-    function fightTurn(type) {
-      let pDmg = gameState.player.atk;
-      if (type === "slash") {
-        if (gameState.player.glow >= 5) { pDmg *= 2; gameState.player.glow -= 5; gameLog("DARK SLASH!"); }
-        else { gameLog("No Glow left!"); return; }
-      }
-
-      // Player attacks
-      gameState.currentEnemy.hp -= pDmg;
-      gameLog(`Hit ${gameState.currentEnemy.name} for ${pDmg}.`);
-
-      if (gameState.currentEnemy.hp <= 0) {
-        gameLog(`Defeated! Found ${gameState.currentEnemy.gold}g and ${gameState.currentEnemy.leather} leather.`);
-        gameState.player.gold += gameState.currentEnemy.gold;
-        gameState.player.leather += gameState.currentEnemy.leather;
-        gameState.player.xp += gameState.currentEnemy.xp;
-        gameState.location = "woods";
-        saveRPG(); updateGameUI(); renderGameMenu(); return;
-      }
-
-      // Enemy attacks
-      let eDmg = Math.max(1, gameState.currentEnemy.atk - gameState.player.def);
-      gameState.player.hp -= eDmg;
-      gameLog(`${gameState.currentEnemy.name} hits you for ${eDmg}.`);
-
-      if (gameState.player.hp <= 0) {
-        gameLog("You collapsed. A stranger dragged you back to town.");
-        gameState.player.hp = 20; gameState.location = "town"; renderGameMenu();
-      }
-      updateGameUI();
+    function talkTrainer() {
+      gameLog("Trainer: 'Focus your mind. It costs Glow, but your next strike will be true.'");
+      gameLog("SYSTEM: You learned the skill [FOCUS].", "log-important");
+      mainMenu();
     }
 
-    function renderBlacksmith() {
-      const area = document.getElementById('game-actions');
-      area.innerHTML = "";
-      gameLog("Smith: 'I can make gear if you have the leather.'");
-      gameBtn("Craft Leather Chest (15 Lthr)", () => {
-        if(gameState.player.leather >= 15) { gameState.player.leather -= 15; gameState.player.def += 10; gameLog("Crafted Leather Chest!"); updateGameUI(); }
-        else gameLog("Not enough leather.");
+    function visitTavern() {
+      clearBtns();
+      gameLog("A young man in soldier's garb sits at the counter, smirking.");
+      addBtn("Talk to Gorm", () => {
+        gameLog("Gorm: 'Looking for Berezino? You don't look like you could handle a fly, let alone the bandits there.'");
+        if(p.lvl >= 6) addBtn("Challenge Gorm", bossGorm);
+        else gameLog("Gorm: 'Come back when you're at least Level 6, brat.'");
       });
-      gameBtn("Buy Iron Sword (100 Gold)", () => {
-        if(gameState.player.gold >= 100) { gameState.player.gold -= 100; gameState.player.atk += 15; gameLog("Bought Iron Sword!"); updateGameUI(); }
-        else gameLog("Not enough gold.");
-      });
-      gameBtn("Back", renderGameMenu);
+      addBtn("Leave", mainMenu);
     }
 
-    function renderStore() {
-      const area = document.getElementById('game-actions'); area.innerHTML = "";
-      gameLog("Store: 'I'll buy your materials.'");
-      gameBtn("Sell 1 Leather (4 Gold)", () => {
-        if(gameState.player.leather > 0) { gameState.player.leather--; gameState.player.gold += 4; updateGameUI(); }
-      });
-      gameBtn("Back", renderGameMenu);
+    function bossGorm() {
+      const gorm = { n: "Gorm (Boss)", hp: 400, atk: 45, spd: 12, gold: 500, l: 0, xp: 1000, boss: true };
+      startCombat(gorm);
     }
 
-    function saveRPG() { localStorage.setItem('oc_rpg_data', JSON.stringify(gameState)); }
-    function loadRPG() {
-      const d = localStorage.getItem('oc_rpg_data');
-      if (d) {
-        gameState = JSON.parse(d);
-        document.getElementById('setup-screen').style.display = 'none';
-        document.getElementById('main-game-screen').style.display = 'block';
-        updateGameUI(); renderGameMenu();
+    function visitSmith() {
+      clearBtns();
+      gameLog("Smith: 'Bring me leather and gold for protection.'");
+      addBtn("Leather Chest (15L, 50g)", () => buyEq('chest', 'Leather Vest', 0, 10, 50, 15));
+      addBtn("Leather Boots (5L, 20g)", () => buyEq('boots', 'Leather Boots', 0, 3, 20, 5));
+      addBtn("Iron Sword (200g)", () => buyEq('weapon', 'Iron Sword', 20, 0, 200, 0));
+      addBtn("Back", mainMenu);
+    }
+
+    function buyEq(slot, name, atk, def, gold, leather) {
+      if(p.gold >= gold && p.leather >= leather) {
+        p.gold -= gold; p.leather -= leather;
+        p.eq[slot] = name;
+        p.str += atk; p.def += def;
+        gameLog(`Equipped ${name}!`);
+        updateUI();
+        document.getElementById(`eq-${slot}`).textContent = name;
+      } else gameLog("Insufficient resources!");
+    }
+
+    // --- COMBAT SYSTEM ---
+    function startCombat(enemy) {
+      combat.active = true;
+      combat.enemy = enemy;
+      combat.enemyMaxHp = enemy.hp;
+      document.getElementById('enemy-ui').style.display = 'block';
+      document.getElementById('enemy-name').textContent = enemy.n;
+      updateEnemyUI();
+      combatTurn();
+    }
+
+    function updateEnemyUI() {
+      const pct = (combat.enemy.hp / combat.enemyMaxHp) * 100;
+      document.getElementById('enemy-hp-fill').style.width = pct + "%";
+      document.getElementById('enemy-hp-text').textContent = `${Math.ceil(combat.enemy.hp)} / ${combat.enemyMaxHp} HP`;
+    }
+
+    function combatTurn() {
+      clearBtns();
+      if(combat.turn === "player") {
+        addBtn("Attack", () => resolveTurn("atk"));
+        addBtn("Dodge", () => resolveTurn("dodge"));
+        addBtn("Block", () => resolveTurn("block"));
+        if(p.skills.includes("Focus")) addBtn("Focus (5 Glow)", () => resolveTurn("focus"));
+      } else {
+        setTimeout(enemyAction, 1000);
       }
     }
 
-    window.onload = () => {
-      loadRPG();
-      const savedPos = localStorage.getItem('tierListPositions');
-      if (savedPos) {
-        const p = JSON.parse(savedPos);
-        Object.keys(p).forEach(t => {
-          const z = t === 'pool' ? document.getElementById('item-pool') : document.querySelector(`[data-tier="${t}"]`);
-          p[t].forEach(name => {
-            const item = [...document.querySelectorAll('.item')].find(i => i.textContent === name);
-            if (item && z) z.appendChild(item);
-          });
-        });
+    function resolveTurn(act) {
+      if(act === "atk") {
+        let dmg = p.str + (Math.random() * 5);
+        if(p.activeBuffs.includes("focused")) {
+          dmg *= 1.5;
+          p.activeBuffs = p.activeBuffs.filter(b => b !== "focused");
+          gameLog("The focused strike connects!");
+        }
+        combat.enemy.hp -= dmg;
+        gameLog(`You hit ${combat.enemy.n} for ${Math.floor(dmg)} damage.`);
+      } 
+      else if(act === "focus") {
+        if(p.glow >= 5) {
+          p.glow -= 5; p.activeBuffs.push("focused");
+          gameLog("You focus your Glow into your next strike.");
+          updateUI(); combatTurn(); return;
+        } else { gameLog("Not enough Glow!"); return; }
       }
-    };
+      else if(act === "dodge") {
+        combat.state = "dodging";
+        gameLog("You prepare to weave through the next attack.");
+      }
+      else if(act === "block") {
+        combat.state = "blocking";
+        gameLog("You raise your guard.");
+      }
 
-    document.getElementById('reset-tierlist').onclick = () => {
-      const pool = document.getElementById('item-pool');
-      document.querySelectorAll('.item').forEach(i => pool.appendChild(i));
-      localStorage.removeItem('tierListPositions');
-    };
+      if(combat.enemy.hp <= 0) return winCombat();
+      combat.turn = "enemy";
+      combatTurn();
+    }
+
+    function enemyAction() {
+      let dmg = combat.enemy.atk;
+      let chance = Math.random();
+
+      if(combat.state === "dodging") {
+        if(chance > 0.3) { gameLog(`You dodged the ${combat.enemy.n}'s attack!`); dmg = 0; }
+        else gameLog("You failed to dodge!");
+      } 
+      else if(combat.state === "blocking") {
+        dmg = Math.max(1, dmg - (p.def * 1.5));
+        gameLog("You blocked most of the damage.");
+      } else {
+        dmg = Math.max(1, dmg - p.def);
+      }
+
+      p.hp -= dmg;
+      if(dmg > 0) gameLog(`${combat.enemy.n} hit you for ${Math.floor(dmg)} damage.`, "log-enemy");
+      combat.state = "normal";
+      updateUI();
+      
+      if(p.hp <= 0) {
+        gameLog("You have been defeated...");
+        setTimeout(() => location.reload(), 3000);
+      } else {
+        combat.turn = "player";
+        combatTurn();
+      }
+    }
+
+    function winCombat() {
+      gameLog(`Victory! Gained ${combat.enemy.gold}g, ${combat.enemy.l} leather, and ${combat.enemy.xp} XP.`, "log-important");
+      p.gold += combat.enemy.gold;
+      p.leather += combat.enemy.l;
+      p.xp += combat.enemy.xp;
+      
+      if(combat.enemy.boss) {
+        gameLog("Gorm: 'Fine! Go to Berezino then. See if I care.'");
+        p.region = "Berezino (Lv 6-14)";
+        regions.mulner.enemies = regions.berezino.enemies; // Update encounter table
+      }
+
+      document.getElementById('enemy-ui').style.display = 'none';
+      combat.active = false;
+      updateUI();
+      mainMenu();
+    }
+
+    // --- TIER LIST LOGIC ---
+    document.querySelectorAll('.item').forEach(it => {
+      it.onpointerdown = e => {
+        it.style.position = 'fixed';
+        it.style.zIndex = 1000;
+        const move = ev => {
+          it.style.left = ev.pageX - 35 + 'px';
+          it.style.top = ev.pageY - 35 + 'px';
+        };
+        document.onpointermove = move;
+        it.onpointerup = ev => {
+          document.onpointermove = null;
+          it.style.position = '';
+          const target = document.elementFromPoint(ev.clientX, ev.clientY)?.closest('.drop-zone');
+          if(target) target.appendChild(it);
+        };
+      };
+    });
   </script>
 </body>
 </html>
